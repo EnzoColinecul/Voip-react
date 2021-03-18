@@ -1,0 +1,7 @@
+{
+  "name": "Voip-react",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
