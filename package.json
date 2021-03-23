@@ -15,7 +15,10 @@
     "@types/react-dom": "^16.9.10",
     "@types/react-router": "^5.1.11",
     "@types/react-router-dom": "^5.1.7",
+    "clone": "^2.1.2",
+    "deepmerge": "^4.2.2",
     "ionicons": "^5.4.0",
+    "jssip": "^3.7.3",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router": "^5.2.0",
@@ -61,7 +64,8 @@
     ]
   },
   "devDependencies": {
-    "@capacitor/cli": "2.4.7"
+    "@capacitor/cli": "2.4.7",
+    "@types/clone": "^2.1.0"
   },
   "description": "An Ionic project"
 }

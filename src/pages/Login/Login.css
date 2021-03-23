@@ -1,0 +1,32 @@
+ion-card {
+  margin-top: 5em;
+}
+
+ion-card-content {
+  text-align: left;
+}
+
+ion-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
+ion-col {
+  align-self: center;
+}
+
+ion-label {
+  font-size: 18px;
+}
+
+ion-item {
+  margin-top: 0.5em;
+  margin-bottom: 1.5em;
+}
+
+ion-input {
+  text-align: center;
+}
+
