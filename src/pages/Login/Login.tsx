@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { ComponentProps, FunctionComponent, SetStateAction, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import {
   IonButton,
@@ -17,26 +17,47 @@ import {
   IonRow
 } from "@ionic/react"
 import { settingsSharp } from 'ionicons/icons'
+import { getDefaultDomain } from '../../data/settingsManager'
 import LoginSettings from '../../components/LoginSettings'
 import './Login.css'
 
+export interface LoginSettings {
+  settingsLog: any;
+  showSettings: boolean;
+  errors: any;
+  name?: string | null;
+}
 
-const Login = ({ settings }: any) => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+
+const Login = ({ settings, onLogin }: any) => {
   const [loginSettings, setLoginSettings] = useState({
     settingsLog: settings,
     showSettings: false,
     errors: {
-      name: null
+      name: ''
     }
   })
 
+  const { settingsLog, showSettings, errors }: LoginSettings = loginSettings
+
+  useEffect(() => {
+    errors.name = null
+  }, [loginSettings])
 
   const handleLogin = (e: React.MouseEvent<HTMLIonButtonElement>) => {
     e.preventDefault()
-    console.log(username, password);
+    _checkForm()
   }
+
+  const handleChange = (e: any) => {
+    const { name, value } = e.target
+    setLoginSettings({ ...loginSettings, settingsLog: { ...settingsLog, [name]: value } })
+  }
+
+  const handleConfirmSettings = (settingsOptions: any) => {
+    setLoginSettings(settingsOptions)
+  }
+
 
   const openModal = () => {
     setLoginSettings({
@@ -52,18 +73,50 @@ const Login = ({ settings }: any) => {
     })
   }
 
+  const _checkPlay = () => {
+    if (settingsLog?.display_name?.length > 5 && !showSettings)
+      return true;
+    else
+      return false;
+  }
 
+  const _checkForm = () => {
+    let ok = true
+    {
+      if (settingsLog.display_name.length < 8) {
+        ok = false
+
+        !ok && (setLoginSettings({
+          ...loginSettings,
+          errors: {
+            name: 'El Dato de Usuario Ingresado es Corto '
+          }
+        }))
+      }
+    }
+
+    if (!settingsLog.uri) {
+      const domain = getDefaultDomain()
+      settingsLog.uri = `sip:${settingsLog.display_name}@${domain}`
+    }
+
+    /* onLogin(settingsLog) */
+  }
 
   return (
     <>
       <IonModal isOpen={loginSettings.showSettings}>
-        <LoginSettings dismissModal={closeModal} />
+        <LoginSettings
+          handleConfirmSettings={handleConfirmSettings}
+          loginSettings={loginSettings}
+          dismissModal={closeModal}
+        />
       </IonModal>
       <IonContent color='primary'>
         <IonCard>
           <IonCardContent>
             <IonCardHeader>
-              <IonCardTitle > Login</IonCardTitle>
+              <IonCardTitle> Login</IonCardTitle>
               <IonButton
                 fill='clear'
                 onClick={openModal}
@@ -77,15 +130,19 @@ const Login = ({ settings }: any) => {
                   <IonLabel color='primary'>Ingrese Datos de Usuario</IonLabel>
                   <IonItem color='light'>
                     <IonInput
-                      name='username'
+                      name='display_name'
                       type='email'
-                      placeholder='Username@PBX/VoIP provider'
-                      value={username}
+                      placeholder='Username'
+                      color={errors.name ? ('danger') : ('dark')}
+                      value={settingsLog?.display_name}
                       required
                       clearInput
-                      onIonChange={((e: any) => setUsername(e.target.value))}
+                      onIonChange={handleChange}
                     />
                   </IonItem>
+                  {errors.name &&
+                    <IonLabel className='label-danger' color='danger'>{errors.name}</IonLabel>
+                  }
                   <IonLabel color='primary'>Ingrese Contraseña</IonLabel>
                   <IonItem color='light'>
                     <IonIcon color='light' name="eye-outline"></IonIcon>
@@ -93,14 +150,16 @@ const Login = ({ settings }: any) => {
                       name='password'
                       type='password'
                       placeholder='Ej: 101extension'
+                      value={settingsLog?.password}
                       required
                       clearInput
-                      onIonChange={((e: any) => setPassword(e.target.value))}
+                      onIonChange={handleChange}
                     />
                   </IonItem>
                   <IonButton
                     expand='block'
-                    onClick={handleLogin}
+                    onClick={(e) => handleLogin(e)}
+                    disabled={!_checkPlay()}
                   >
                     Ingresar
                 </IonButton>
@@ -115,8 +174,8 @@ const Login = ({ settings }: any) => {
 }
 
 Login.propTypes = {
-  settings: PropTypes.object.isRequired,
-  onLogin: PropTypes.func.isRequired
+  // settings: PropTypes.object.isRequired,
+  // onLogin: PropTypes.func.isRequired
 }
 
 export default Login

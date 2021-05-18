@@ -16,7 +16,7 @@ const DEFAULT_SETTINGS =
   password: null,
   socket:
   {
-    uri: 'wss://192.168.1.105:5056',
+    uri: 'wss://192.168.1.105',
     'via_transport': 'auto'
   },
   'registrar_server': null,
@@ -60,27 +60,25 @@ if (!settings) {
   settings = clone(DEFAULT_SETTINGS, false)
 }
 
-module.exports =
-{
-  get() {
-    return settings;
-  },
 
-  set(newSettings: object) {
-    setStorage(newSettings);
-    settings = newSettings;
-  },
+export const getSettings = () => {
+  return settings;
+}
 
-  clear() {
-    clearStorage();
-    settings = clone(DEFAULT_SETTINGS, false);
-  },
+export const setSettings = (newSettings: object) => {
+  setStorage(newSettings);
+  settings = newSettings;
+}
 
-  isReady() {
-    return Boolean(settings.uri);
-  },
+export const clearSettings = () => {
+  clearStorage();
+  settings = clone(DEFAULT_SETTINGS, false);
+}
 
-  getDefaultDomain() {
-    return DEFAULT_SIP_DOMAIN;
-  }
-};
+export const isReady = () => {
+  return Boolean(settings.uri);
+}
+
+export const getDefaultDomain = () => {
+  return DEFAULT_SIP_DOMAIN;
+}
