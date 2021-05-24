@@ -10,8 +10,9 @@ ion-card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding-inline: 0%;
+  padding: 0%;
 }
-
 
 ion-col {
   align-self: center;
@@ -19,6 +20,7 @@ ion-col {
 
 ion-label {
   font-size: 18px;
+  font-weight: bold;
 }
 
 ion-item {
@@ -27,6 +29,12 @@ ion-item {
 }
 
 ion-input {
+  text-align: center;
+}
+
+ion-title {
+  display: flex;
+  flex: none;
   text-align: center;
 }
 

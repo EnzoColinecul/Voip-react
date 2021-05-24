@@ -1,6 +1,19 @@
 import React, { ComponentProps, FunctionComponent, SetStateAction, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import {
+  Invitation,
+  InvitationAcceptOptions,
+  Inviter,
+  Referral,
+  Registerer,
+  SessionState,
+  Session,
+  UserAgent,
+  UserAgentOptions,
+  Ack
+} from 'sip.js'
+import { IncomingRequestMessage } from 'sip.js/lib/core'
+import {
   IonButton,
   IonCard,
   IonCardContent,
@@ -14,9 +27,10 @@ import {
   IonItem,
   IonLabel,
   IonModal,
-  IonRow
-} from "@ionic/react"
-import { Registerer, UserAgent, UserAgentOptions, Web } from 'sip.js'
+  IonRow,
+  useIonToast
+} from '@ionic/react'
+import { getAudio, getVideo } from '../../helpers/getElements'
 import './Test.css'
 
 export interface LoginSettings {
@@ -26,65 +40,183 @@ export interface LoginSettings {
   name?: string | null;
 }
 
+const Test = () => {
 
-const Login = () => {
-  /* const [loginSettings, setLoginSettings] = useState({
-    settingsLog: settings,
-    showSettings: false,
-    errors: {
-      name: ''
+  const [present, dismiss] = useIonToast();
+
+  async function playAudio() {
+    try {
+      await audio.play().then((e) => {
+      })
+    } catch (error) {
+      console.log(error);
     }
-  })
-
-  const { settingsLog, showSettings, errors }: LoginSettings = loginSettings
-
-  useEffect(() => {
-    errors.name = null
-  }, [loginSettings])
-
-  const handleLogin = (e: React.MouseEvent<HTMLIonButtonElement>) => {
-    e.preventDefault()
   }
 
-  const handleChange = (e: any) => {
-    const { name, value } = e.target
-    setLoginSettings({ ...loginSettings, settingsLog: { ...settingsLog, [name]: value } })
-  }
+  const audio = getAudio("audio")
 
-  const handleConfirmSettings = (settingsOptions: any) => {
-    setLoginSettings(settingsOptions)
-  } */
 
   const transportOptions = {
-    server: 'ws://192.168.1.102:8089/ws'
+    server: 'ws://192.168.1.10:8088/ws'
   }
 
-  const uri = UserAgent.makeURI("sip:101@192.168.1.102")
+  const uri = UserAgent.makeURI('sip:103@192.168.1.10:8088')
+
+  if (!uri) {
+    throw new Error('Failed to create URI');
+  }
 
   const userAgentOptions: UserAgentOptions = {
-    authorizationUsername: '101',
-    authorizationPassword: '',
+    uri,
     transportOptions,
-    uri
-  }
+    authorizationPassword: 'enzo103',
+    authorizationUsername: '103',
+    displayName: '103',
 
-  const userAgent = new UserAgent(userAgentOptions)
+    /* ... */
+  };
+  const userAgent = new UserAgent(userAgentOptions);
+  const registerer = new Registerer(userAgent);
 
 
+  userAgent.delegate = {
+    onInvite(invitation: Invitation): void {
+      // An Invitation is a Session
+      const incomingSession = invitation;
 
-  const registerer = new Registerer(userAgent)
+      if (incomingSession.state === 'Initial') {
+        present("Incoming Call...")
 
-  const handleRegisterer = () => {
+        const testAudio = document.getElementById("test-audio")
+        testAudio.onplay = (e) => {
+          e.preventDefault()
+          playAudio().then(() => {
+            console.log('Ring Ring');
 
-    userAgent.start().then(() => {
-      registerer.register();
-    });
-  }
+          }).catch(error => console.log(error))
+        }
+        console.log(testAudio);
 
-  console.log(registerer);
+      }
 
+      incomingSession.delegate = {
+        // Handle incoming REFER request.
+        onRefer(referral: Referral): void {
+          // ...
+        },
+      };
+
+      // Handle incoming INVITE request.
+      let constrainsDefault = {
+        audio: true,
+        video: false,
+        render: {
+          remote: {
+            audio: audio
+          }
+        }
+      }
+
+      const options: InvitationAcceptOptions = {
+        sessionDescriptionHandlerOptions: {
+          constraints: constrainsDefault,
+        }
+      }
+      console.log("newstate asdsad", incomingSession.state);
+
+      incomingSession.stateChange.addListener((newState: SessionState) => {
+        console.log("newstate", newState);
+        switch (newState) {
+          case SessionState.Initial:
+
+            break;
+          case SessionState.Establishing:
+            // Session is establishing.
+            break;
+          case SessionState.Established:
+            // Session has been established.
+            break;
+          case SessionState.Terminated:
+            // Session has terminated.
+            dismiss()
+            break;
+          default:
+            incomingSession.dispose()
+            break;
+        }
+      });
+
+    }
+  };
+
+  userAgent.start().then(() => {
+    registerer.register()
+    /*  const target = UserAgent.makeURI("sip:104@192.168.1.106:8089");
+     if (!target) {
+       throw new Error("Failed to create target URI.");
+     }
+ 
+     const inviter = new Inviter(userAgent, target);
+ 
+     const outgoingSession = inviter;
+ 
+     outgoingSession.delegate = {
+       // Handle incoming REFER request.
+       onRefer(referral: Referral): void {
+         // ...
+       }
+     };
+ 
+     // Handle outgoing session state changes.
+     outgoingSession.stateChange.addListener((newState: SessionState) => {
+       switch (newState) {
+         case SessionState.Establishing:
+           // Session is establishing.
+           break;
+         case SessionState.Established:
+           // Session has been established.
+           break;
+         case SessionState.Terminated:
+           // Session has terminated.
+           break;
+         default:
+           break;
+       }
+     });
+ 
+     // Send the INVITE request
+     inviter.invite()
+       .then(() => {
+         // INVITE sent
+       })
+       .catch((error: Error) => {
+         // INVITE did not send
+       });
+ 
+     // Send an outgoing REFER request
+       const transferTarget = UserAgent.makeURI("sip:transfer@example.com");
+     
+       if (!transferTarget) {
+         throw new Error("Failed to create transfer target URI.");
+       }
+     
+       outgoingSession.refer(transferTarget, {
+         // Example of extra headers in REFER request
+         requestOptions: {
+           extraHeaders: [
+             'X-Referred-By-Someone: Username'
+           ]
+         },
+         requestDelegate: {
+           onAccept(): void {
+             // ...
+           }
+         }
+       }); */
+  })
   return (
     <>
+      <audio id="test-audio" autoPlay loop></audio>
       <IonContent color='primary'>
         <IonCard>
           <IonCardContent>
@@ -120,9 +252,8 @@ const Login = () => {
                   </IonLabel>
                   <IonButton
                     expand='block'
-                    onClick={handleRegisterer}
                   >
-                    Llamar
+                    Atender
                 </IonButton>
                 </IonCol>
               </IonRow>
@@ -134,4 +265,5 @@ const Login = () => {
   )
 }
 
-export default Login
+export default Test
+

@@ -17,7 +17,6 @@ import {
   IonRow
 } from "@ionic/react"
 import { settingsSharp } from 'ionicons/icons'
-import { getDefaultDomain } from '../../data/settingsManager'
 import LoginSettings from '../../components/LoginSettings'
 import './Login.css'
 
@@ -30,96 +29,22 @@ export interface LoginSettings {
 
 
 const Login = ({ settings, onLogin }: any) => {
-  const [loginSettings, setLoginSettings] = useState({
-    settingsLog: settings,
-    showSettings: false,
-    errors: {
-      name: ''
-    }
-  })
 
-  const { settingsLog, showSettings, errors }: LoginSettings = loginSettings
-
-  useEffect(() => {
-    errors.name = null
-  }, [loginSettings])
-
-  const handleLogin = (e: React.MouseEvent<HTMLIonButtonElement>) => {
-    e.preventDefault()
-    _checkForm()
-  }
-
-  const handleChange = (e: any) => {
-    const { name, value } = e.target
-    setLoginSettings({ ...loginSettings, settingsLog: { ...settingsLog, [name]: value } })
-  }
-
-  const handleConfirmSettings = (settingsOptions: any) => {
-    setLoginSettings(settingsOptions)
-  }
-
-
-  const openModal = () => {
-    setLoginSettings({
-      ...loginSettings,
-      showSettings: true
-    })
-  }
-
-  const closeModal = () => {
-    setLoginSettings({
-      ...loginSettings,
-      showSettings: false
-    })
-  }
-
-  const _checkPlay = () => {
-    if (settingsLog?.display_name?.length > 5 && !showSettings)
-      return true;
-    else
-      return false;
-  }
-
-  const _checkForm = () => {
-    let ok = true
-    {
-      if (settingsLog.display_name.length < 8) {
-        ok = false
-
-        !ok && (setLoginSettings({
-          ...loginSettings,
-          errors: {
-            name: 'El Dato de Usuario Ingresado es Corto '
-          }
-        }))
-      }
-    }
-
-    if (!settingsLog.uri) {
-      const domain = getDefaultDomain()
-      settingsLog.uri = `sip:${settingsLog.display_name}@${domain}`
-    }
-
-    /* onLogin(settingsLog) */
-  }
+  const [showModal, setShowModal] = useState(false)
 
   return (
     <>
-      <IonModal isOpen={loginSettings.showSettings}>
-        <LoginSettings
-          handleConfirmSettings={handleConfirmSettings}
-          loginSettings={loginSettings}
-          dismissModal={closeModal}
-        />
+      <IonModal onDidDismiss={() => setShowModal(false)} isOpen={showModal}>
+        <LoginSettings setShowModal={setShowModal} />
       </IonModal>
       <IonContent color='primary'>
-        <IonCard>
+        <IonCard className="md ion-margin-horizontal" >
           <IonCardContent>
             <IonCardHeader>
-              <IonCardTitle> Login</IonCardTitle>
+              <IonCardTitle>Login</IonCardTitle>
               <IonButton
                 fill='clear'
-                onClick={openModal}
+                onClick={() => setShowModal(true)}
               >
                 <IonIcon color='dark' icon={settingsSharp}></IonIcon>
               </IonButton>
@@ -132,34 +57,25 @@ const Login = ({ settings, onLogin }: any) => {
                     <IonInput
                       name='display_name'
                       type='email'
-                      placeholder='Username'
-                      color={errors.name ? ('danger') : ('dark')}
-                      value={settingsLog?.display_name}
+                      placeholder='Usuario@PBX/VoIP'
+                      color={('dark')}
                       required
                       clearInput
-                      onIonChange={handleChange}
                     />
                   </IonItem>
-                  {errors.name &&
-                    <IonLabel className='label-danger' color='danger'>{errors.name}</IonLabel>
-                  }
                   <IonLabel color='primary'>Ingrese Contraseña</IonLabel>
                   <IonItem color='light'>
                     <IonIcon color='light' name="eye-outline"></IonIcon>
                     <IonInput
                       name='password'
                       type='password'
-                      placeholder='Ej: 101extension'
-                      value={settingsLog?.password}
+                      placeholder='Contraseña'
                       required
                       clearInput
-                      onIonChange={handleChange}
                     />
                   </IonItem>
                   <IonButton
                     expand='block'
-                    onClick={(e) => handleLogin(e)}
-                    disabled={!_checkPlay()}
                   >
                     Ingresar
                 </IonButton>
