@@ -4,16 +4,12 @@ interface ILogin {
 }
 
 type LoginState = {
-  user: ILogin,
-  registerState: ILogin
+  registerState: string 
 }
 
 type LoginAction = {
   type: string,
-  payload: {
-    user: ILogin,
-    registerState: ILogin
-  }
+  payload: ILogin
 }
 
 
@@ -22,13 +18,19 @@ interface IUserInterface {
   msgError: string
 }
 
-type UiError  = string
+type UiError = string
 
 type UiAction = {
   type: string,
   payload: IUserInterface
 }
 
-type Dispatchers = { LoginAction, UiAction }
+interface SipInterface {
+  extensionNumber: number,
+  sessionState: string,
+}
 
-type DispatchType = (args: LoginAction) => LoginAction
+type SipAction = {
+  type: string,
+  payload: SipInterface
+}

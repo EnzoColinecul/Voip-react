@@ -19,7 +19,7 @@ export const startLoginWithUserAndPassword = (user: string, password: string) =>
     let subString: string = ""
 
     if (!uri) {
-      throw new Error('Failed to create URI');
+      throw new Error('Failed to create URI')
     } else {
       subString = user.split('@')[0]
     }
@@ -30,19 +30,15 @@ export const startLoginWithUserAndPassword = (user: string, password: string) =>
       authorizationPassword: password,
       authorizationUsername: subString,
       displayName: subString,
-    };
+    }
 
-    console.log(uri, transportOptions, subString);
-
-
-    const userAgent = new UserAgent(userAgentOptions);
-    const registerer = new Registerer(userAgent);
+    const userAgent = new UserAgent(userAgentOptions)
+    const registerer = new Registerer(userAgent)
 
     userAgent.start().then(() => {
       setTimeout(() => {
       registerer.register()
         registerer.stateChange.addListener((newState: RegistererState) => {
-          console.log("newstate equal: ", newState);
           switch (newState) {
             case RegistererState.Initial:
               break;
@@ -70,6 +66,14 @@ export const login = (user: string, registerState: string) => ({
   type: types.authLogin,
   payload: {
     user,
-    registerState
+    registerState,
+    test: 'pasaeltest'
   }
+})
+
+export const startCall = () => {
+
+}
+
+export const setCall = () => ({
 })

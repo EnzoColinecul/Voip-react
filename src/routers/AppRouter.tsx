@@ -30,7 +30,7 @@ const AppRouter = () => {
         duration={200}
         color="light"
       />
-       <IonLoading isOpen={loading} message="Espere..." duration={4000} />
+      <IonLoading isOpen={loading} message="Espere..." duration={4000} />
       <IonReactRouter>
         <Switch>
           <PrivateRoute

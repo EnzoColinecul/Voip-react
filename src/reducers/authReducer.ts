@@ -4,7 +4,7 @@ type initialState = {
   registerState: string
 }
 
-export const authReducer = (state: initialState =  {registerState: ""} , action: LoginAction) => {
+export const authReducer = (state: LoginState = { registerState: "" }, action: LoginAction) => {
   switch (action.type) {
     case types.authLogin:
       return {
