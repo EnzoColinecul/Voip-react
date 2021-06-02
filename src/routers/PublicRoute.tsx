@@ -6,7 +6,7 @@ declare interface Props {
   component: React.Component
 }
 
-const PrivateRoute = ({
+const PublicRoute = ({
   isLogged,
   component: Component,
   ...rest
@@ -14,12 +14,12 @@ const PrivateRoute = ({
   return (
     <Route {...rest}
       component={(props) => (
-        (isLogged)
+        (!isLogged)
           ? (<Component {...props} />)
-          : (<Redirect to='/auth/login' />)
+          : (<Redirect to='/' />)
       )}
     />
   )
 }
 
-export default PrivateRoute
+export default PublicRoute
