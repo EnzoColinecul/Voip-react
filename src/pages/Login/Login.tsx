@@ -14,17 +14,11 @@ import {
   IonItem,
   IonLabel,
   IonModal,
-  IonRow,
-  IonToast
+  IonRow
 } from "@ionic/react"
-import { Dispatch } from 'redux'
-import { RootStateOrAny, useDispatch, useSelector } from 'react-redux'
-import { startLoginWithUserAndPassword } from '../../actions/auth'
 import { settingsSharp } from 'ionicons/icons'
 import LoginSettings from '../../components/LoginSettings'
 import './Login.css'
-import useForm from '../../hooks/useForm'
-import { setError } from '../../actions/ui'
 
 export interface LoginSettings {
   settingsLog: any;
@@ -34,33 +28,12 @@ export interface LoginSettings {
 }
 
 
-const Login = () => {
-
-  const dispatch: Dispatch<any> = useDispatch()
-  const { msgError } = useSelector((state: RootStateOrAny) => state.ui)
+const Login = ({ settings, onLogin }: any) => {
 
   const [showModal, setShowModal] = useState(false)
-  const [formValues, handleInputChange] = useForm({
-    username: "103@192.168.1.10:8088",
-    password: "enzo103"
-  })
-
-  const { username, password } = formValues
-
-  const handleLogin = (e) => {
-    e.preventDefault()
-    dispatch(startLoginWithUserAndPassword(username, password))
-  }
 
   return (
     <>
-      <IonToast
-        isOpen={msgError !== null}
-        onDidDismiss={() => dispatch(setError(null)) }
-        message={msgError}
-        position="top"
-        duration={5000}
-      />
       <IonModal onDidDismiss={() => setShowModal(false)} isOpen={showModal}>
         <LoginSettings setShowModal={setShowModal} />
       </IonModal>
@@ -82,10 +55,8 @@ const Login = () => {
                   <IonLabel color='primary'>Ingrese Datos de Usuario</IonLabel>
                   <IonItem color='light'>
                     <IonInput
-                      onIonChange={handleInputChange}
-                      name='username'
-                      value={username}
-                      type='text'
+                      name='display_name'
+                      type='email'
                       placeholder='Usuario@PBX/VoIP'
                       color={('dark')}
                       required
@@ -96,9 +67,7 @@ const Login = () => {
                   <IonItem color='light'>
                     <IonIcon color='light' name="eye-outline"></IonIcon>
                     <IonInput
-                      onIonChange={handleInputChange}
                       name='password'
-                      value={password}
                       type='password'
                       placeholder='Contraseña'
                       required
@@ -106,7 +75,6 @@ const Login = () => {
                     />
                   </IonItem>
                   <IonButton
-                    onClick={handleLogin}
                     expand='block'
                   >
                     Ingresar
