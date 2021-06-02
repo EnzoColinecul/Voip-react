@@ -33,6 +33,8 @@ export const startLoginWithUserAndPassword = (user: string, password: string) =>
     }
 
     const userAgent = new UserAgent(userAgentOptions)
+    console.log("userAgent is:",userAgent);
+    
     const registerer = new Registerer(userAgent)
 
     userAgent.start().then(() => {
@@ -44,6 +46,7 @@ export const startLoginWithUserAndPassword = (user: string, password: string) =>
               break;
             case RegistererState.Registered:
               dispatch(login(subString, RegistererState.Registered))
+              dispatch(UA(userAgent))
               break;
             case RegistererState.Unregistered:
               dispatch(setError(`Ingreso fallido, compruebe los datos ingresados SIP:${RegistererState.Unregistered}`))
@@ -71,9 +74,7 @@ export const login = (user: string, registerState: string) => ({
   }
 })
 
-export const startCall = () => {
-
-}
-
-export const setCall = () => ({
+export const UA = (userAgent: UserAgent) => ({
+  type: types.sipUserAgent,
+  payload: userAgent
 })

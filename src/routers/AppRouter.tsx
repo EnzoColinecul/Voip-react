@@ -7,12 +7,13 @@ import PublicRoute from './PublicRoute'
 import PrivateRoute from './PrivateRoute'
 import Home from '../pages/Home/Home'
 import Login from '../pages/Login/Login'
+import { RootState } from '../store/store'
 
 const AppRouter = () => {
   const [isLogged, setIsLogged] = useState<boolean>(false)
 
-  const { msgError, loading } = useSelector((state: RootStateOrAny) => state.ui)
-  const { registerState } = useSelector((state: RootStateOrAny) => state.auth)
+  const { msgError, loading } = useSelector((state: RootState) => state.ui)
+  const { registerState } = useSelector((state: RootState) => state.auth)
 
   useEffect(() => {
     setIsLogged(false)
@@ -27,7 +28,7 @@ const AppRouter = () => {
         isOpen={msgError}
         message={msgError}
         position="top"
-        duration={200}
+        duration={300}
         color="light"
       />
       <IonLoading isOpen={loading} message="Espere..." duration={4000} />

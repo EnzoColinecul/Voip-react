@@ -26,8 +26,8 @@ type UiAction = {
 }
 
 interface SipInterface {
-  extensionNumber: number,
-  sessionState: string,
+  extensionToCall: string | null,
+  sessionState: string | null,
 }
 
 type SipAction = {

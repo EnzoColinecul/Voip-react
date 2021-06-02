@@ -1,13 +1,32 @@
+import { UserAgent } from "sip.js";
 import { types } from "../types/types";
 
-export const sipReducer = (state: SipInterface, action: SipAction) => {
+type initialState = {
+  userAgent: object | UserAgent,
+  extensionToCall: string | null,
+  sessionState: string | null
+}
+
+const initialState = {
+  userAgent: {},
+  extensionToCall: null,
+  sessionState: null
+}
+
+export const sipReducer = (state: SipInterface | null = initialState, action: SipAction) => {
   switch (action.type) {
+    case types.sipUserAgent:
+      return {
+        ...state,
+        userAgent: action.payload
+      }
     case types.sipStartCalling:
       return {
         ...state,
-        extensionNumber: action.payload.extensionNumber,
+        extensionToCall: action.payload.extensionToCall,
         sessionState: action.payload.sessionState
       }
     default:
+      return state
   }
 }

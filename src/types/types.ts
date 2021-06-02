@@ -8,6 +8,7 @@ export const types = {
   uiStartLoading: '[UI] Start Loading',
   uiFinishLoading: '[UI] Finish Loading',
 
+  sipUserAgent: '[SIP] Receive UA',
   sipStartCalling: '[SIP] Start Calling',
   sipIncomingCall: '[SIP] Incoming Call',
   sipStartCommunication: '[SIP] Start Communication',

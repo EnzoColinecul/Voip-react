@@ -31,6 +31,7 @@ import {
   useIonToast
 } from '@ionic/react'
 import { getAudio, getVideo } from '../../helpers/getElements'
+import {ws_domain} from '../../server/domain'
 import './Test.css'
 
 export interface LoginSettings {
@@ -57,7 +58,7 @@ const Test = () => {
 
 
   const transportOptions = {
-    server: 'ws://192.168.1.10:8088/ws'
+    server: ws_domain
   }
 
   const uri = UserAgent.makeURI('sip:103@192.168.1.10:8088')
@@ -91,11 +92,11 @@ const Test = () => {
         testAudio.onplay = (e) => {
           e.preventDefault()
           playAudio().then(() => {
-            console.log('Ring Ring');
+            console.log('Ring Ring')
 
           }).catch(error => console.log(error))
         }
-        console.log(testAudio);
+        console.log(testAudio)
 
       }
 
@@ -151,12 +152,12 @@ const Test = () => {
     registerer.register()
     const target = UserAgent.makeURI("sip:104@192.168.1.10:8088");
     if (!target) {
-      throw new Error("Failed to create target URI.");
+      throw new Error("Failed to create target URI.")
     }
 
-    const inviter = new Inviter(userAgent, target);
+    const inviter = new Inviter(userAgent, target)
 
-    const outgoingSession = inviter;
+    const outgoingSession = inviter
 
     outgoingSession.delegate = {
       // Handle incoming REFER request.
