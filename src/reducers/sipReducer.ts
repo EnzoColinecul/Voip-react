@@ -13,7 +13,7 @@ const initialState = {
   sessionState: null
 }
 
-export const sipReducer = (state: SipInterface | null = initialState, action: SipAction) => {
+export const sipReducer = (state: SipState  = initialState, action: SipAction) => {
   switch (action.type) {
     case types.sipUserAgent:
       return {

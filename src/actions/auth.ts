@@ -1,11 +1,18 @@
 import { types } from "../types/types"
 import {
+  Invitation,
+  InvitationAcceptOptions,
+  Referral,
   Registerer,
   RegistererState,
+  Session,
+  SessionState,
   UserAgent,
-  UserAgentOptions
+  UserAgentOptions,
+  Web
 } from 'sip.js'
 import { setError, startLoading, finishLoading } from "./ui"
+import {assignStream} from '../helpers/assignStream'
 
 export const startLoginWithUserAndPassword = (user: string, password: string) => {
 
@@ -33,13 +40,12 @@ export const startLoginWithUserAndPassword = (user: string, password: string) =>
     }
 
     const userAgent = new UserAgent(userAgentOptions)
-    console.log("userAgent is:",userAgent);
-    
+
     const registerer = new Registerer(userAgent)
 
     userAgent.start().then(() => {
       setTimeout(() => {
-      registerer.register()
+        registerer.register()
         registerer.stateChange.addListener((newState: RegistererState) => {
           switch (newState) {
             case RegistererState.Initial:
@@ -58,10 +64,59 @@ export const startLoginWithUserAndPassword = (user: string, password: string) =>
           }
         })
         dispatch(finishLoading())
-      }, 4000);
+      }, 1000);
     }).catch((err: Error) => {
       alert(err);
     })
+    userAgent.delegate = {
+      onInvite(invitation: Invitation): void {
+
+        // An Invitation is a Session
+        const incomingSession: Session = invitation;
+        console.log(incomingSession);
+
+        // Setup incoming session delegate
+        incomingSession.delegate = {
+          // Handle incoming REFER request.
+          onRefer(referral: Referral): void {
+            // ...
+          }
+        };
+
+        const remoteAudio: HTMLAudioElement | null = document.querySelector('#remoteAudio')
+        const localAudio: HTMLAudioElement | null = document.querySelector('#localAudio')
+
+
+        // Handle incoming session state changes.
+        incomingSession.stateChange.addListener((newState: SessionState) => {
+          switch (newState) {
+            case SessionState.Establishing:
+              // Session is establishing.
+              break;
+            case SessionState.Established:
+              // Session has been established.
+              break;
+            case SessionState.Terminated:
+              // Session has terminated.
+              break;
+            default:
+              break;
+          }
+        });
+
+        let constrainsDefault: MediaStreamConstraints = {
+          audio: true,
+          video: false,
+        }
+
+        const options: InvitationAcceptOptions = {
+          sessionDescriptionHandlerOptions: {
+            constraints: constrainsDefault,
+          },
+        }
+        invitation.accept(options)
+      }
+    }
   }
 }
 

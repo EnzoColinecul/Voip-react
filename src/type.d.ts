@@ -30,6 +30,12 @@ interface SipInterface {
   sessionState: string | null,
 }
 
+type SipState = {
+  userAgent: object | UserAgent,
+  extensionToCall: string | null,
+  sessionState: string | null
+}
+
 type SipAction = {
   type: string,
   payload: SipInterface

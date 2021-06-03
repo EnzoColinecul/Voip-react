@@ -56,7 +56,6 @@ const Test = () => {
 
   const audio = getAudio("audio")
 
-
   const transportOptions = {
     server: ws_domain
   }
@@ -75,10 +74,10 @@ const Test = () => {
     displayName: '103',
 
     /* ... */
-  };
+  }
+
   const userAgent = new UserAgent(userAgentOptions);
   const registerer = new Registerer(userAgent);
-
 
   userAgent.delegate = {
     onInvite(invitation: Invitation): void {

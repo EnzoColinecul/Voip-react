@@ -15,22 +15,26 @@ import {
   IonPage,
   IonRow,
   IonTitle,
+  IonToast,
   IonToolbar
 } from '@ionic/react';
 import { ellipseSharp, keypad, settingsSharp } from 'ionicons/icons';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { startCall } from '../../actions/sip'
-import {setError} from '../../actions/ui'
+import { setError } from '../../actions/ui'
+import { RootState } from '../../store/store';
 import ExploreContainer from '../../components/ExploreContainer';
 import KeyPad from '../../components/home/KeyPad';
 import './Home.css';
 
 const Home: React.FC = () => {
 
-  const [inputValue, setInputValue] = useState<string | null>("")
+  const [inputValue, setInputValue] = useState<string | null>('')
 
   const dispatch = useDispatch()
+
+  const { msgError } = useSelector((state: RootState) => state.ui)
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value)
@@ -39,14 +43,13 @@ const Home: React.FC = () => {
   const handleCall = () => {
     if (inputValue) {
       dispatch(startCall(inputValue))
-    }else{
-      dispatch(setError("Please enter a number to call"))
+    } else {
+      dispatch(setError('Please enter a number to call'))
     }
   }
 
   return (
     <>
-      <audio id="test-audio" autoPlay loop></audio>
       <IonPage>
         <IonHeader>
           <IonToolbar>
@@ -65,7 +68,7 @@ const Home: React.FC = () => {
                 <IonButton
                   fill="clear"
                 >
-                  <IonIcon color='dark' icon={settingsSharp}></IonIcon>
+                  <IonIcon color="dark" icon={settingsSharp}></IonIcon>
                 </IonButton>
               </IonCardHeader>
               <IonItem color="light" >
@@ -79,7 +82,7 @@ const Home: React.FC = () => {
                   clearInput
                 />
               </IonItem>
-              <IonGrid size-md='6'>
+              <IonGrid size-md="6">
                 <div className="keypad-container">
                   <KeyPad setInputValue={setInputValue} handleCall={handleCall} />
                 </div>
