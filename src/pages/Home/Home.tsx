@@ -37,6 +37,7 @@ const Home: React.FC = () => {
   const { msgError } = useSelector((state: RootState) => state.ui)
 
   const handleInputChange = (e) => {
+    e.preventDefault()
     setInputValue(e.target.value)
   }
 

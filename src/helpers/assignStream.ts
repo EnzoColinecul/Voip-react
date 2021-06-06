@@ -4,10 +4,18 @@ export const assignStream = (stream: MediaStream, element: HTMLAudioElement): vo
   element.srcObject = stream;
 
   // Load and start playback of media.
-  element.play().catch((error: Error) => {
-    console.error("Failed to play media");
-    console.error(error);
-  });
+
+  const playPromise = element.play()
+  if (playPromise !== undefined) {    
+    playPromise
+      .then((): void => {
+        console.error("Good!") 
+      })
+      .catch((error: Error) => {
+        console.error("Failed to play media");
+        console.error(error);
+      });
+  }
 
   // If a track is added, load and restart playback of media.
   stream.onaddtrack = (): void => {

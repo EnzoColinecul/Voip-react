@@ -1,11 +1,10 @@
 interface ILogin {
-  user: string,
-  registerState: string
+  user: string  | null,
+  registerState: string | null
 }
 
-type LoginState = {
-  registerState: string 
-}
+type LoginState = ILogin
+
 
 type LoginAction = {
   type: string,
