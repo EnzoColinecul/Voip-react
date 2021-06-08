@@ -4,16 +4,18 @@ import { types } from "../types/types";
 type initialState = {
   userAgent: object | UserAgent,
   extensionToCall: string | null,
-  sessionState: string | null
+  sessionState: string | null,
+  startCall: boolean | null
 }
 
 const initialState = {
   userAgent: {},
   extensionToCall: null,
-  sessionState: null
+  sessionState: null,
+  startCall: null 
 }
 
-export const sipReducer = (state: SipState  = initialState, action: SipAction) => {
+export const sipReducer = (state: SipState = initialState, action: SipAction) => {
   switch (action.type) {
     case types.sipUserAgent:
       return {
@@ -25,6 +27,11 @@ export const sipReducer = (state: SipState  = initialState, action: SipAction) =
         ...state,
         extensionToCall: action.payload.extensionToCall,
         sessionState: action.payload.sessionState
+      }
+    case types.sipStartCommunication:
+      return {
+        ...state,
+        startCall: action.payload
       }
     default:
       return state

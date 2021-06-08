@@ -14,8 +14,10 @@ import { RootState } from "../store/store";
 import { assignStream } from "../helpers/assignStream";
 import { handleStateChanges } from "../helpers/onChangeSessionState";
 import { sip_domain, ws_domain } from "../server/domain";
+import { startAlert } from "./ui";
+import { types } from "../types/types";
 
-type Actions = { type: 'FOO' } | { type: 'BAR'; result: number };
+type Actions = { type: 'FOO' } | { type: string; };
 
 type ThunkResult<R> = ThunkAction<R, RootState, undefined, Actions>;
 
@@ -23,11 +25,9 @@ const remoteAudio: HTMLAudioElement | null = document.querySelector('#remoteAudi
 const localAudio: HTMLAudioElement | null = document.querySelector('#localAudio')
 
 export const startCall = (sipToCall: string): ThunkResult<void> => {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     const { userAgent } = getState().sip
     const { user } = getState().auth
-
-    console.error(remoteAudio, localAudio);
 
     const target = UserAgent.makeURI(`sip:${sipToCall}@${sip_domain}`);
     if (!target) {
@@ -51,7 +51,9 @@ export const startCall = (sipToCall: string): ThunkResult<void> => {
         // ...
       },
     };
-    handleStateChanges(outgoingSession, localAudio, remoteAudio)
+
+
+
     // Send the INVITE request
     inviter.invite()
       .then(() => {
@@ -63,34 +65,50 @@ export const startCall = (sipToCall: string): ThunkResult<void> => {
   }
 }
 
-export const startCallReceive = (invitation: Invitation) => {
+export const startCallReceive = (invitation: Invitation): ThunkResult<void> => {
 
-  // An Invitation is a Session
-  const incomingSession = invitation;
+  const incomingSession = invitation // no lo toma dentro del return
+  return (dispatch, getState,invitation) => {
+    
+    console.error(invitation);
+    if (invitation) {
 
-  // Setup incoming session delegate
-  incomingSession.delegate = {
-    // Handle incoming REFER request.
-    onRefer(referral: Referral): void {
-      // ...
     }
-  };
 
-  // Handle incoming session state changes.
-  handleStateChanges(incomingSession, localAudio, remoteAudio)
+    // Setup incoming session delegate
+    incomingSession.delegate = {
+      // Handle incoming REFER request.
+      onRefer(referral: Referral): void {
+        // ...
+      }
+    };
 
-  let constrainsDefault: MediaStreamConstraints = {
-    audio: true,
-    video: true,
+    // Handle incoming session state changes.
+
+    let constrainsDefault: MediaStreamConstraints = {
+      audio: true,
+      video: false,
+    }
+
+    const options: InvitationAcceptOptions = {
+      sessionDescriptionHandlerOptions: {
+        constraints: constrainsDefault,
+      },
+    }
+
+    // incomingSession.accept(options)
+
+
+
+    if (!startCall) {
+      incomingSession.reject()
+    }
   }
-
-  const options: InvitationAcceptOptions = {
-    sessionDescriptionHandlerOptions: {
-      constraints: constrainsDefault,
-    },
-  }
-  incomingSession.accept(options)
 }
 
+export const setCommunication = (boolean: boolean) => ({
+  type: types.sipStartCommunication,
+  payload: true
+})
 
 

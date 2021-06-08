@@ -16,10 +16,16 @@ import { assignStream } from '../helpers/assignStream'
 import { createElement } from "react"
 import { TransportOptions } from "sip.js/lib/platform/web"
 import { startCallReceive } from "./sip"
+import { ThunkAction } from "redux-thunk"
+import { RootState } from "../store/store"
 
-export const startLoginWithUserAndPassword = (user: string, password: string) => {
+type Actions = { type: 'FOO' } | { type: string};
 
-  return async (dispatch: any) => {
+type ThunkResult<R> = ThunkAction<R, RootState, undefined, Actions>;
+
+export const startLoginWithUserAndPassword = (user: string, password: string): ThunkResult<void> => {
+
+  return async (dispatch) => {
     dispatch(startLoading())
     const uri = UserAgent.makeURI(`sip:${user}`)
     const transportOptions: TransportOptions = {
@@ -42,11 +48,9 @@ export const startLoginWithUserAndPassword = (user: string, password: string) =>
       authorizationPassword: password,
       authorizationUsername: subString,
       displayName: subString,
-     /*  sessionDescriptionHandlerFactory:{
-        
-      }, */
       delegate: {
-        onInvite: (invitation) => startCallReceive(invitation)
+        onInvite: (invitation) => startCallReceive(invitation),
+        
       },
     }
 

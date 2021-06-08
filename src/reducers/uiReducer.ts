@@ -2,7 +2,8 @@ import { types } from "../types/types"
 
 const initialState = {
   loading: false,
-  msgError: null
+  msgError: null,
+  showAlert: false
 }
 
 export const uiReducer = (state = initialState, action: UiAction) => {
@@ -26,6 +27,16 @@ export const uiReducer = (state = initialState, action: UiAction) => {
       return {
         ...state,
         loading: false
+      }
+    case types.uiStartCallAlert:
+      return {
+        ...state,
+        showAlert: true
+      }
+    case types.uiFinishCallAlert:
+      return {
+        ...state,
+        showAlert: false
       }
     default:
       return state;

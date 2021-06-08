@@ -6,7 +6,9 @@ export const handleStateChanges = (
   localHTMLMediaElement: HTMLAudioElement | HTMLVideoElement | null,
   remoteHTMLMediaElement: HTMLAudioElement | HTMLVideoElement | null
   ):void => {
-    session.stateChange.addListener((state: SessionState) => {      
+    session.stateChange.addListener((state: SessionState) => { 
+      console.error(state);
+           
       switch (state) {
         case SessionState.Initial:
           break;
@@ -23,6 +25,7 @@ export const handleStateChanges = (
           if (remoteHTMLMediaElement) {
             assignStream(sessionDescriptionHandler.remoteMediaStream, remoteHTMLMediaElement);
           }
+          return SessionState.Established
           break;
         case SessionState.Terminating:
           break;
