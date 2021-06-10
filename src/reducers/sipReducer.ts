@@ -5,14 +5,14 @@ type initialState = {
   userAgent: object | UserAgent,
   extensionToCall: string | null,
   sessionState: string | null,
-  startCall: boolean | null
+  startCall: string | null
 }
 
 const initialState = {
   userAgent: {},
   extensionToCall: null,
   sessionState: null,
-  startCall: null 
+  startCall: '' 
 }
 
 export const sipReducer = (state: SipState = initialState, action: SipAction) => {

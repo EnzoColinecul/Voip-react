@@ -18,6 +18,7 @@ import { TransportOptions } from "sip.js/lib/platform/web"
 import { startCallReceive } from "./sip"
 import { ThunkAction } from "redux-thunk"
 import { RootState } from "../store/store"
+import { ws_domain } from "../server/domain"
 
 type Actions = { type: 'FOO' } | { type: string};
 
@@ -29,7 +30,7 @@ export const startLoginWithUserAndPassword = (user: string, password: string): T
     dispatch(startLoading())
     const uri = UserAgent.makeURI(`sip:${user}`)
     const transportOptions: TransportOptions = {
-      server: 'ws://192.168.1.10:8088/ws',
+      server: ws_domain,
       connectionTimeout: 60 * 10,
       traceSip: true,
     }
@@ -49,7 +50,7 @@ export const startLoginWithUserAndPassword = (user: string, password: string): T
       authorizationUsername: subString,
       displayName: subString,
       delegate: {
-        onInvite: (invitation) => startCallReceive(invitation),
+        onInvite: (invitation) => dispatch(startCallReceive(invitation)),
         
       },
     }

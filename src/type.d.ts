@@ -33,7 +33,7 @@ type SipState = {
   userAgent: object | UserAgent,
   extensionToCall: string | null,
   sessionState: string | null,
-  startCall: boolean | null
+  startCall: string | null
 }
 
 type SipAction = {

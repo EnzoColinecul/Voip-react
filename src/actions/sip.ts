@@ -66,15 +66,13 @@ export const startCall = (sipToCall: string): ThunkResult<void> => {
 }
 
 export const startCallReceive = (invitation: Invitation): ThunkResult<void> => {
+  return (dispatch, getState) => {
 
-  const incomingSession = invitation // no lo toma dentro del return
-  return (dispatch, getState,invitation) => {
-    
-    console.error(invitation);
-    if (invitation) {
+    dispatch(startAlert())
 
-    }
+    const { startCall } = getState().sip
 
+    const incomingSession = invitation
     // Setup incoming session delegate
     incomingSession.delegate = {
       // Handle incoming REFER request.
@@ -96,19 +94,17 @@ export const startCallReceive = (invitation: Invitation): ThunkResult<void> => {
       },
     }
 
-    // incomingSession.accept(options)
-
-
-
-    if (!startCall) {
+    if (startCall === 'accept') {
+      incomingSession.accept(options)
+    } else if (startCall === 'reject') {
       incomingSession.reject()
-    }
+    }else incomingSession.dispose()
   }
 }
 
-export const setCommunication = (boolean: boolean) => ({
+export const setCommunication = (value: string) => ({
   type: types.sipStartCommunication,
-  payload: true
+  payload: value
 })
 
 

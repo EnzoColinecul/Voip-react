@@ -4,7 +4,7 @@ import { IonReactRouter } from '@ionic/react-router'
 import { Redirect, Route, Switch } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../store/store'
-import { setError } from '../actions/ui'
+import { finishAlert, setError } from '../actions/ui'
 import { setCommunication } from '../actions/sip'
 import PublicRoute from './PublicRoute'
 import PrivateRoute from './PrivateRoute'
@@ -16,17 +16,17 @@ import './index.css'
 const AppRouter = () => {
   const [isLogged, setIsLogged] = useState<boolean>(false)
 
-  const { msgError, loading } = useSelector((state: RootState) => state.ui)
+  const { msgError, loading, showAlert } = useSelector((state: RootState) => state.ui)
   const { registerState } = useSelector((state: RootState) => state.auth)
 
   const dispatch = useDispatch()
 
   const handleAnswerCall = () => {
-    dispatch(setCommunication(true))
+    dispatch(setCommunication('accept'))
   }
 
   const handlerRejectCall = () => {
-    dispatch(setCommunication(false))
+    dispatch(setCommunication('reject'))
   }
 
   const rejectCallBtn = {
@@ -58,7 +58,8 @@ const AppRouter = () => {
         color="light"
       />
       <IonAlert
-        isOpen={true}
+        isOpen={showAlert}
+        onDidDismiss={() => dispatch(finishAlert())}
         header={'Incoming Call'}
         subHeader={'From internal 103'}
         cssClass='my-custom-class '
