@@ -13,6 +13,7 @@ import {
   IonInput,
   IonItem,
   IonList,
+  IonModal,
   IonPage,
   IonRow,
   IonTitle,
@@ -27,6 +28,7 @@ import { finishAlert, setError, startAlert } from '../../actions/ui'
 import { RootState } from '../../store/store';
 import ExploreContainer from '../../components/ExploreContainer';
 import KeyPad from '../../components/home/KeyPad';
+import ModalCall from '../../components/home/ModalCall';
 import './Home.css';
 
 const Home: React.FC = () => {
@@ -41,7 +43,6 @@ const Home: React.FC = () => {
 
   const handlerRejectCall = () => dispatch(startRejectCall(incomingSession))
 
-
   const handleInputChange = (e) => {
     e.preventDefault()
     setInputValue(e.target.value)
@@ -54,6 +55,7 @@ const Home: React.FC = () => {
       dispatch(setError('Please enter a number to call'))
     }
   }
+
   const rejectCallBtn = {
     text: 'Reject Call',
     role: 'reject',
@@ -77,6 +79,9 @@ const Home: React.FC = () => {
           answerCallBtn
         ]}
       />
+      <IonModal isOpen={true}>
+        <ModalCall/>
+      </IonModal>
       <IonPage>
         <IonHeader>
           <IonToolbar>

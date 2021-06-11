@@ -12,7 +12,6 @@ import {
 } from "sip.js";
 import { RootState } from "../store/store";
 import { assignStream } from "../helpers/assignStream";
-import { handleStateChanges } from "../helpers/onChangeSessionState";
 import { sip_domain, ws_domain } from "../server/domain";
 import { startAlert } from "./ui";
 import { types } from "../types/types";
@@ -35,6 +34,9 @@ export const startCall = (sipToCall: string): ThunkResult<void> => {
     }
 
     const inviter = new Inviter(userAgent, target)
+    const outgoingSession = inviter
+
+    dispatch(handleStateChanges(outgoingSession, localAudio, remoteAudio))
 
     const inviterOptions: InviterOptions = {
       params: {
@@ -42,9 +44,6 @@ export const startCall = (sipToCall: string): ThunkResult<void> => {
         fromUri: `sip:${user}@${sip_domain}`
       }
     }
-
-    const outgoingSession = inviter
-    handleStateChanges(outgoingSession, localAudio, remoteAudio)
 
     outgoingSession.delegate = {
       // Handle incoming REFER request.
@@ -68,7 +67,7 @@ export const startAcceptCall = (invitation: Invitation): ThunkResult<void> => {
   return (dispatch, getState) => {
     const incomingSession = invitation
 
-    handleStateChanges(incomingSession, localAudio, remoteAudio)
+    dispatch(handleStateChanges(incomingSession, localAudio, remoteAudio))
 
     // Setup incoming session delegate
     incomingSession.delegate = {
@@ -100,7 +99,7 @@ export const startRejectCall = (invitation: Invitation): ThunkResult<void> => {
   }
 }
 
-export const clearIncomingSession = () =>({
+export const clearIncomingSession = () => ({
   type: types.sipClearIncomingSession
 })
 
@@ -108,5 +107,44 @@ export const setInvitation = (invitation: Invitation) => ({
   type: types.sipIncomingCall,
   payload: invitation
 })
+
+export const handleStateChanges = (
+  session: Session,
+  localHTMLMediaElement: HTMLAudioElement | HTMLVideoElement | null,
+  remoteHTMLMediaElement: HTMLAudioElement | HTMLVideoElement | null
+): ThunkResult<void> => {
+  return (dispatch) => {
+    session.stateChange.addListener((state: SessionState) => {
+      console.error(state);
+      
+      switch (state) {
+        case SessionState.Initial:
+          break;
+        case SessionState.Establishing:
+          // dispatch() Accion para mostrar modal
+          break;
+        case SessionState.Established:
+          const sessionDescriptionHandler = session.sessionDescriptionHandler;
+          if (!sessionDescriptionHandler || !(sessionDescriptionHandler instanceof Web.SessionDescriptionHandler)) {
+            throw new Error("Invalid session description handler.");
+          }
+          if (localHTMLMediaElement) {
+            assignStream(sessionDescriptionHandler.localMediaStream, localHTMLMediaElement);
+          }
+          if (remoteHTMLMediaElement) {
+            assignStream(sessionDescriptionHandler.remoteMediaStream, remoteHTMLMediaElement);
+          }
+          return SessionState.Established
+          break;
+        case SessionState.Terminating:
+          break;
+        case SessionState.Terminated:
+          break;
+        default:
+          throw new Error("Unknown session state.");
+      }
+    })
+  }
+}
 
 

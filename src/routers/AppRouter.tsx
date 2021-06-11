@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { IonAlert, IonLoading, IonRedirect, IonRouterOutlet, IonToast } from '@ionic/react'
+import {
+  IonAlert,
+  IonLoading,
+  IonRedirect,
+  IonRouterOutlet,
+  IonToast
+} from '@ionic/react'
 import { IonReactRouter } from '@ionic/react-router'
 import { Redirect, Route, Switch } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../store/store'
 import { finishAlert, setError } from '../actions/ui'
-import { setCommunication } from '../actions/sip'
 import PublicRoute from './PublicRoute'
 import PrivateRoute from './PrivateRoute'
 import Home from '../pages/Home/Home'
@@ -15,7 +20,6 @@ import './index.css'
 
 const AppRouter = () => {
   const [isLogged, setIsLogged] = useState<boolean>(false)
-
   const { msgError, loading, showAlert } = useSelector((state: RootState) => state.ui)
   const { registerState } = useSelector((state: RootState) => state.auth)
 
@@ -38,7 +42,7 @@ const AppRouter = () => {
         duration={2000}
         color="light"
       />
-     
+
       <IonLoading isOpen={loading} message="Espere..." duration={4000} />
       <IonReactRouter>
         <Switch>

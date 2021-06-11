@@ -56,7 +56,7 @@ const KeyPad = ({ setInputValue, handleCall }: HomeProps) => {
           className="keypad-button"
           onClick={handleCall}
           >
-            <IonIcon color="dark" icon={callSharp} />
+            <IonIcon  color="dark" icon={callSharp} />
           </IonButton>
           <IonButton
             onClick={() => setInputValue(prevState => prevState + "0")}
