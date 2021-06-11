@@ -5,14 +5,15 @@ type initialState = {
   userAgent: object | UserAgent,
   extensionToCall: string | null,
   sessionState: string | null,
-  startCall: string | null
+  startCall: string | null,
 }
 
 const initialState = {
   userAgent: {},
   extensionToCall: null,
   sessionState: null,
-  startCall: '' 
+  incomingSession: null,
+  startCall: ''
 }
 
 export const sipReducer = (state: SipState = initialState, action: SipAction) => {
@@ -32,6 +33,15 @@ export const sipReducer = (state: SipState = initialState, action: SipAction) =>
       return {
         ...state,
         startCall: action.payload
+      }
+    case types.sipIncomingCall:
+      return {
+        ...state,
+        incomingSession: action.payload
+      }
+    case types.sipClearIncomingSession:
+      return {
+        incomingSession: null
       }
     default:
       return state

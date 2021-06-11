@@ -16,4 +16,5 @@ export const types = {
   sipIncomingCall: '[SIP] Incoming Call',
   sipStartCommunication: '[SIP] Start Communication',
   sipFinishCommunication: '[SIP] Finish Communication',
+  sipClearIncomingSession: '[SIP] Clear Incoming Session'
 }

@@ -21,25 +21,6 @@ const AppRouter = () => {
 
   const dispatch = useDispatch()
 
-  const handleAnswerCall = () => {
-    dispatch(setCommunication('accept'))
-  }
-
-  const handlerRejectCall = () => {
-    dispatch(setCommunication('reject'))
-  }
-
-  const rejectCallBtn = {
-    text: 'Reject Call',
-    role: 'reject',
-    handler: handlerRejectCall
-  }
-
-  const answerCallBtn = {
-    text: 'Accept',
-    handler: handleAnswerCall
-  }
-
   useEffect(() => {
     setIsLogged(false)
     if (registerState === 'Registered') {
@@ -57,17 +38,7 @@ const AppRouter = () => {
         duration={2000}
         color="light"
       />
-      <IonAlert
-        isOpen={showAlert}
-        onDidDismiss={() => dispatch(finishAlert())}
-        header={'Incoming Call'}
-        subHeader={'From internal 103'}
-        cssClass='my-custom-class '
-        buttons={[
-          rejectCallBtn,
-          answerCallBtn
-        ]}
-      />
+     
       <IonLoading isOpen={loading} message="Espere..." duration={4000} />
       <IonReactRouter>
         <Switch>

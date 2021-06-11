@@ -15,7 +15,7 @@ import { setError, startLoading, finishLoading } from "./ui"
 import { assignStream } from '../helpers/assignStream'
 import { createElement } from "react"
 import { TransportOptions } from "sip.js/lib/platform/web"
-import { startCallReceive } from "./sip"
+import { setInvitation } from "./sip"
 import { ThunkAction } from "redux-thunk"
 import { RootState } from "../store/store"
 import { ws_domain } from "../server/domain"
@@ -50,9 +50,8 @@ export const startLoginWithUserAndPassword = (user: string, password: string): T
       authorizationUsername: subString,
       displayName: subString,
       delegate: {
-        onInvite: (invitation) => dispatch(startCallReceive(invitation)),
-        
-      },
+        onInvite: (invitation) => dispatch(setInvitation(invitation))
+      }
     }
 
     const userAgent = new UserAgent(userAgentOptions)

@@ -1,4 +1,5 @@
 import {
+  IonAlert,
   IonButton,
   IonCard,
   IonCardContent,
@@ -21,8 +22,8 @@ import {
 import { ellipseSharp, keypad, settingsSharp } from 'ionicons/icons';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { startCall } from '../../actions/sip'
-import { setError } from '../../actions/ui'
+import { startCall, startAcceptCall, startRejectCall } from '../../actions/sip'
+import { finishAlert, setError, startAlert } from '../../actions/ui'
 import { RootState } from '../../store/store';
 import ExploreContainer from '../../components/ExploreContainer';
 import KeyPad from '../../components/home/KeyPad';
@@ -31,10 +32,15 @@ import './Home.css';
 const Home: React.FC = () => {
 
   const [inputValue, setInputValue] = useState<string | null>('')
+  const { msgError, showAlert } = useSelector((state: RootState) => state.ui)
+  const { incomingSession } = useSelector((state: RootState) => state.sip)
 
   const dispatch = useDispatch()
 
-  const { msgError } = useSelector((state: RootState) => state.ui)
+  const handleAnswerCall = () => dispatch(startAcceptCall(incomingSession))
+
+  const handlerRejectCall = () => dispatch(startRejectCall(incomingSession))
+
 
   const handleInputChange = (e) => {
     e.preventDefault()
@@ -48,9 +54,29 @@ const Home: React.FC = () => {
       dispatch(setError('Please enter a number to call'))
     }
   }
+  const rejectCallBtn = {
+    text: 'Reject Call',
+    role: 'reject',
+    handler: handlerRejectCall
+  }
+
+  const answerCallBtn = {
+    text: 'Accept',
+    handler: handleAnswerCall
+  }
 
   return (
     <>
+      <IonAlert
+        isOpen={incomingSession !== null}
+        header={'Incoming Call'}
+        subHeader={incomingSession && `From internal ${incomingSession.assertedIdentity?.displayName}`}
+        cssClass='my-custom-class '
+        buttons={[
+          rejectCallBtn,
+          answerCallBtn
+        ]}
+      />
       <IonPage>
         <IonHeader>
           <IonToolbar>

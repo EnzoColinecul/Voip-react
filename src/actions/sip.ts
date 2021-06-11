@@ -44,15 +44,14 @@ export const startCall = (sipToCall: string): ThunkResult<void> => {
     }
 
     const outgoingSession = inviter
+    handleStateChanges(outgoingSession, localAudio, remoteAudio)
 
     outgoingSession.delegate = {
       // Handle incoming REFER request.
       onRefer(referral: Referral): void {
         // ...
       },
-    };
-
-
+    }
 
     // Send the INVITE request
     inviter.invite()
@@ -65,14 +64,12 @@ export const startCall = (sipToCall: string): ThunkResult<void> => {
   }
 }
 
-export const startCallReceive = (invitation: Invitation): ThunkResult<void> => {
+export const startAcceptCall = (invitation: Invitation): ThunkResult<void> => {
   return (dispatch, getState) => {
-
-    dispatch(startAlert())
-
-    const { startCall } = getState().sip
-
     const incomingSession = invitation
+
+    handleStateChanges(incomingSession, localAudio, remoteAudio)
+
     // Setup incoming session delegate
     incomingSession.delegate = {
       // Handle incoming REFER request.
@@ -80,9 +77,7 @@ export const startCallReceive = (invitation: Invitation): ThunkResult<void> => {
         // ...
       }
     };
-
     // Handle incoming session state changes.
-
     let constrainsDefault: MediaStreamConstraints = {
       audio: true,
       video: false,
@@ -91,20 +86,27 @@ export const startCallReceive = (invitation: Invitation): ThunkResult<void> => {
     const options: InvitationAcceptOptions = {
       sessionDescriptionHandlerOptions: {
         constraints: constrainsDefault,
-      },
+      }
     }
 
-    if (startCall === 'accept') {
-      incomingSession.accept(options)
-    } else if (startCall === 'reject') {
-      incomingSession.reject()
-    }else incomingSession.dispose()
+    incomingSession.accept(options)
   }
 }
 
-export const setCommunication = (value: string) => ({
-  type: types.sipStartCommunication,
-  payload: value
+export const startRejectCall = (invitation: Invitation): ThunkResult<void> => {
+  return (dispatch) => {
+    invitation.reject()
+    dispatch(clearIncomingSession())
+  }
+}
+
+export const clearIncomingSession = () =>({
+  type: types.sipClearIncomingSession
+})
+
+export const setInvitation = (invitation: Invitation) => ({
+  type: types.sipIncomingCall,
+  payload: invitation
 })
 
 
