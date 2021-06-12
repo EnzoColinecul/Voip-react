@@ -25,6 +25,7 @@ const localAudio: HTMLAudioElement | null = document.querySelector('#localAudio'
 
 export const startCall = (sipToCall: string): ThunkResult<void> => {
   return async (dispatch, getState) => {
+    dispatch(setExtensionTocall(sipToCall))
     const { userAgent } = getState().sip
     const { user } = getState().auth
 
@@ -34,9 +35,9 @@ export const startCall = (sipToCall: string): ThunkResult<void> => {
     }
 
     const inviter = new Inviter(userAgent, target)
+    dispatch(handleStateChanges(inviter, localAudio, remoteAudio))
     const outgoingSession = inviter
 
-    dispatch(handleStateChanges(outgoingSession, localAudio, remoteAudio))
 
     const inviterOptions: InviterOptions = {
       params: {
@@ -63,11 +64,16 @@ export const startCall = (sipToCall: string): ThunkResult<void> => {
   }
 }
 
+export const setExtensionTocall = (sipToCall: string) => ({
+  type: types.sipSetExtensionToCall,
+  payload: sipToCall
+})
+
 export const startAcceptCall = (invitation: Invitation): ThunkResult<void> => {
   return (dispatch, getState) => {
+    dispatch(handleStateChanges(invitation, localAudio, remoteAudio))
     const incomingSession = invitation
 
-    dispatch(handleStateChanges(incomingSession, localAudio, remoteAudio))
 
     // Setup incoming session delegate
     incomingSession.delegate = {
@@ -108,6 +114,7 @@ export const setInvitation = (invitation: Invitation) => ({
   payload: invitation
 })
 
+
 export const handleStateChanges = (
   session: Session,
   localHTMLMediaElement: HTMLAudioElement | HTMLVideoElement | null,
@@ -116,14 +123,18 @@ export const handleStateChanges = (
   return (dispatch) => {
     session.stateChange.addListener((state: SessionState) => {
       console.error(state);
-      
+
       switch (state) {
         case SessionState.Initial:
           break;
         case SessionState.Establishing:
           // dispatch() Accion para mostrar modal
+          console.error('SessionState is', state);
+
+          dispatch(setSessionState(SessionState.Establishing))
           break;
         case SessionState.Established:
+          dispatch(setSessionState(SessionState.Established))
           const sessionDescriptionHandler = session.sessionDescriptionHandler;
           if (!sessionDescriptionHandler || !(sessionDescriptionHandler instanceof Web.SessionDescriptionHandler)) {
             throw new Error("Invalid session description handler.");
@@ -139,6 +150,7 @@ export const handleStateChanges = (
         case SessionState.Terminating:
           break;
         case SessionState.Terminated:
+          dispatch(setSessionState(SessionState.Terminated))
           break;
         default:
           throw new Error("Unknown session state.");
@@ -147,4 +159,14 @@ export const handleStateChanges = (
   }
 }
 
+export const setSessionState = (sessionState: SessionState) => ({
+  type: types.sipStartCalling,
+  payload: sessionState
+})
 
+export const startHangupCall = (invitation: Invitation): ThunkResult<void> => {
+  return (dispatch) => {
+    invitation.bye()
+    dispatch(clearIncomingSession())
+  }
+}

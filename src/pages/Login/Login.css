@@ -38,10 +38,11 @@ ion-title {
   text-align: center;
 }
 
+
+
 .label-danger {
   font-size: 1em;
   justify-content: center;
   display: flex;
   margin-bottom: 1em;
 }
-

@@ -26,8 +26,12 @@ export const sipReducer = (state: SipState = initialState, action: SipAction) =>
     case types.sipStartCalling:
       return {
         ...state,
-        extensionToCall: action.payload.extensionToCall,
-        sessionState: action.payload.sessionState
+        sessionState: action.payload
+      }
+    case types.sipSetExtensionToCall:      
+      return {
+        ...state,
+        extensionToCall: action.payload
       }
     case types.sipStartCommunication:
       return {
@@ -41,6 +45,7 @@ export const sipReducer = (state: SipState = initialState, action: SipAction) =>
       }
     case types.sipClearIncomingSession:
       return {
+        ...state,
         incomingSession: null
       }
     default:

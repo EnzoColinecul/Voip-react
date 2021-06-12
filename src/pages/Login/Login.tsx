@@ -121,9 +121,4 @@ const Login = () => {
   )
 }
 
-Login.propTypes = {
-  // settings: PropTypes.object.isRequired,
-  // onLogin: PropTypes.func.isRequired
-}
-
 export default Login

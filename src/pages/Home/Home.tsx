@@ -35,7 +35,7 @@ const Home: React.FC = () => {
 
   const [inputValue, setInputValue] = useState<string | null>('')
   const { msgError, showAlert } = useSelector((state: RootState) => state.ui)
-  const { incomingSession } = useSelector((state: RootState) => state.sip)
+  const { incomingSession, sessionState } = useSelector((state: RootState) => state.sip)
 
   const dispatch = useDispatch()
 
@@ -79,8 +79,8 @@ const Home: React.FC = () => {
           answerCallBtn
         ]}
       />
-      <IonModal isOpen={true}>
-        <ModalCall/>
+      <IonModal isOpen={sessionState === 'Establishing' || sessionState === 'Established'}>
+        <ModalCall incomingSession={incomingSession} />
       </IonModal>
       <IonPage>
         <IonHeader>
