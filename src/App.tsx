@@ -1,5 +1,5 @@
 import { Redirect, Route } from 'react-router-dom';
-import { IonApp, IonNav, IonRouterOutlet } from '@ionic/react';
+import { IonApp, IonNav, IonRouterOutlet, IonToast } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import Home from './pages/Home/Home';
 import Login from './pages/Login/Login';
@@ -23,21 +23,17 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import { RootStateOrAny, useSelector } from 'react-redux';
+import AppRouter from './routers/AppRouter';
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonNav/>
-    <IonReactRouter>
-      <IonRouterOutlet>
-        <Route exact path="/home" component={Home}/>
-        <Route exact path="/login" component={Login} />
-        <Route exact path="/test" component={Test} />
-        <Route exact path="/">
-          <Redirect to="/login" />
-        </Route>
-      </IonRouterOutlet>
-    </IonReactRouter>
-  </IonApp>
-);
+const App: React.FC = () => {
+
+  return (
+    <IonApp>
+      <IonNav />
+      <AppRouter />
+    </IonApp>
+  )
+};
 
 export default App;

@@ -3,10 +3,11 @@ import { callSharp, laptop } from 'ionicons/icons'
 import React from 'react'
 
 type HomeProps = {
-  setInputValue: React.Dispatch<React.SetStateAction<string>>
+  setInputValue: React.Dispatch<React.SetStateAction<string>>,
+  handleCall: () => void
 }
 
-const KeyPad = ({ setInputValue }: HomeProps) => {
+const KeyPad = ({ setInputValue, handleCall }: HomeProps) => {
 
   const numbers = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
   
@@ -50,8 +51,12 @@ const KeyPad = ({ setInputValue }: HomeProps) => {
           }
         </IonRow>
         <IonRow className="ion-justify-content-center keypad-row" >
-          <IonButton color="success" className="keypad-button" >
-            <IonIcon color="dark" icon={callSharp} />
+          <IonButton 
+          color="success" 
+          className="keypad-button"
+          onClick={handleCall}
+          >
+            <IonIcon  color="dark" icon={callSharp} />
           </IonButton>
           <IonButton
             onClick={() => setInputValue(prevState => prevState + "0")}

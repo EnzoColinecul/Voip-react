@@ -31,6 +31,7 @@ import {
   useIonToast
 } from '@ionic/react'
 import { getAudio, getVideo } from '../../helpers/getElements'
+import {ws_domain} from '../../server/domain'
 import './Test.css'
 
 export interface LoginSettings {
@@ -55,9 +56,8 @@ const Test = () => {
 
   const audio = getAudio("audio")
 
-
   const transportOptions = {
-    server: 'ws://192.168.1.10:8088/ws'
+    server: ws_domain
   }
 
   const uri = UserAgent.makeURI('sip:103@192.168.1.10:8088')
@@ -74,10 +74,10 @@ const Test = () => {
     displayName: '103',
 
     /* ... */
-  };
+  }
+
   const userAgent = new UserAgent(userAgentOptions);
   const registerer = new Registerer(userAgent);
-
 
   userAgent.delegate = {
     onInvite(invitation: Invitation): void {
@@ -91,11 +91,11 @@ const Test = () => {
         testAudio.onplay = (e) => {
           e.preventDefault()
           playAudio().then(() => {
-            console.log('Ring Ring');
+            console.log('Ring Ring')
 
           }).catch(error => console.log(error))
         }
-        console.log(testAudio);
+        console.log(testAudio)
 
       }
 
@@ -138,10 +138,8 @@ const Test = () => {
             break;
           case SessionState.Terminated:
             // Session has terminated.
-            dismiss()
             break;
           default:
-            incomingSession.dispose()
             break;
         }
       });
@@ -151,68 +149,56 @@ const Test = () => {
 
   userAgent.start().then(() => {
     registerer.register()
-    /*  const target = UserAgent.makeURI("sip:104@192.168.1.106:8089");
-     if (!target) {
-       throw new Error("Failed to create target URI.");
-     }
- 
-     const inviter = new Inviter(userAgent, target);
- 
-     const outgoingSession = inviter;
- 
-     outgoingSession.delegate = {
-       // Handle incoming REFER request.
-       onRefer(referral: Referral): void {
-         // ...
-       }
-     };
- 
-     // Handle outgoing session state changes.
-     outgoingSession.stateChange.addListener((newState: SessionState) => {
-       switch (newState) {
-         case SessionState.Establishing:
-           // Session is establishing.
-           break;
-         case SessionState.Established:
-           // Session has been established.
-           break;
-         case SessionState.Terminated:
-           // Session has terminated.
-           break;
-         default:
-           break;
-       }
-     });
- 
-     // Send the INVITE request
-     inviter.invite()
-       .then(() => {
-         // INVITE sent
-       })
-       .catch((error: Error) => {
-         // INVITE did not send
-       });
- 
-     // Send an outgoing REFER request
-       const transferTarget = UserAgent.makeURI("sip:transfer@example.com");
-     
-       if (!transferTarget) {
-         throw new Error("Failed to create transfer target URI.");
-       }
-     
-       outgoingSession.refer(transferTarget, {
-         // Example of extra headers in REFER request
-         requestOptions: {
-           extraHeaders: [
-             'X-Referred-By-Someone: Username'
-           ]
-         },
-         requestDelegate: {
-           onAccept(): void {
-             // ...
-           }
-         }
-       }); */
+    const target = UserAgent.makeURI("sip:104@192.168.1.10:8088");
+    if (!target) {
+      throw new Error("Failed to create target URI.")
+    }
+
+    const inviter = new Inviter(userAgent, target)
+
+    const outgoingSession = inviter
+
+    outgoingSession.delegate = {
+      // Handle incoming REFER request.
+      onRefer(referral: Referral): void {
+        // ...
+      }
+    };
+
+    // Handle outgoing session state changes.
+    outgoingSession.stateChange.addListener((newState: SessionState) => {
+      switch (newState) {
+        case SessionState.Establishing:
+          // Session is establishing.
+          break;
+        case SessionState.Established:
+          // Session has been established.
+          break;
+        case SessionState.Terminated:
+          // Session has terminated.
+          break;
+        default:
+          break;
+      }
+    });
+
+    // Send the INVITE request
+    inviter.invite()
+      .then(() => {
+        // INVITE sent
+      })
+      .catch((error: Error) => {
+        // INVITE did not send
+      });
+
+    // Send an outgoing REFER request
+    const transferTarget = UserAgent.makeURI("sip:transfer@example.com");
+
+    if (!transferTarget) {
+      throw new Error("Failed to create transfer target URI.");
+    }
+
+   
   })
   return (
     <>

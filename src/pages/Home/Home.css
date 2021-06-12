@@ -29,3 +29,37 @@ input[type="number"] {
   display: flex;
   align-items: center;
 }
+
+.icon-transform {
+  transform: rotate(135deg);
+}
+
+.modal-call-header-title {
+  font-size: 3.5em;
+  margin-top: 1em;
+  --border-color: black;
+  --background: black;
+}
+
+.modal-call-title{
+  text-align: center;
+  padding: 1em;
+  font-size: x-large;
+}
+
+.modal-call-tittle-spinner{
+  top: 10px;
+}
+
+.modal-fab-button {
+  --padding-start: 3.5em;
+  --padding-end: 2em;
+  --padding-top: 3.5em;
+  --padding-bottom: 2em;
+}
+
+.modal-row {
+  padding: 4em 2em 4em 0.5em;
+  display: flex;
+  height: 100%;
+}
