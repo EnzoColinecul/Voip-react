@@ -6,6 +6,30 @@ ion-card-content {
   text-align: left;
 }
 
+.login-subheader {
+  margin-top: 1rem;
+  font-size: 8rem;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.login-item {
+  --highlight-height: 0;
+  --border-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.login-input {
+  border-radius: 20px;
+  background-color: #e0e0e0;
+}
+
+.login-input input {
+  margin-left: 16px;
+}
+
 ion-card-header {
   display: flex;
   align-items: center;
@@ -19,11 +43,15 @@ ion-col {
 }
 
 ion-label {
+  display: flex;
+  justify-content: center;
   font-size: 18px;
   font-weight: bold;
 }
 
 ion-item {
+  display: flex;
+  flex-direction: column;
   margin-top: 0.5em;
   margin-bottom: 1.5em;
 }
@@ -37,8 +65,6 @@ ion-title {
   flex: none;
   text-align: center;
 }
-
-
 
 .label-danger {
   font-size: 1em;
