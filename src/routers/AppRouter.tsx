@@ -14,7 +14,6 @@ import { finishAlert, setError } from '../actions/ui'
 import PublicRoute from './PublicRoute'
 import PrivateRoute from './PrivateRoute'
 import Home from '../pages/Home/Home'
-import HomeCopy from '../pages/Home/Homecopy'
 import Login from '../pages/Login/Login'
 
 import './index.css'
@@ -41,9 +40,7 @@ const AppRouter = () => {
         message={msgError}
         position="top"
         duration={2000}
-        color="light"
       />
-
       <IonLoading  isOpen={loading} message="Espere..." />
       <IonReactRouter>
         <Switch>
@@ -51,7 +48,7 @@ const AppRouter = () => {
             exact
             path='/'
             isLogged={isLogged}
-            component={HomeCopy}
+            component={Home}
           />
           <PublicRoute
             path='/auth/login'

@@ -49,21 +49,21 @@ const ModalCall = ({ incomingSession }) => {
         <IonRow className='modal-row' >
           <IonCol >
             <IonFab horizontal='center' >
-              <IonFabButton className="modal-fab-button" >
+              <IonFabButton color='secondary' className="modal-fab-button" >
                 <IonIcon size='large' icon={volumeHighOutline} />
               </IonFabButton>
             </IonFab>
           </IonCol>
           <IonCol >
             <IonFab horizontal='center' >
-              <IonFabButton className="modal-fab-button" >
+              <IonFabButton color='secondary' className="modal-fab-button" >
                 <IonIcon size='large' icon={micOutline} />
               </IonFabButton>
             </IonFab>
           </IonCol>
           <IonCol>
             <IonFab horizontal='center' >
-              <IonFabButton className="modal-fab-button" >
+              <IonFabButton color='secondary' className="modal-fab-button" >
                 <IonIcon size='large' icon={keypad} />
               </IonFabButton>
             </IonFab>

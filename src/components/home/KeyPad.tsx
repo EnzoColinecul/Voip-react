@@ -10,13 +10,13 @@ type HomeProps = {
 const KeyPad = ({ setInputValue, handleCall }: HomeProps) => {
 
   const numbers = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
-  
+
   return (
-    <IonGrid size-md='3'>
-      <IonCol  >
-        <IonRow className="ion-justify-content-center"  >
+      <>
+        <div className="keypad-row"  >
           {numbers[0].map(number => (
             <IonButton
+              expand='full'
               onClick={() => setInputValue(prevState => prevState + number.toString())}
               className="keypad-button"
               key={number}
@@ -25,10 +25,11 @@ const KeyPad = ({ setInputValue, handleCall }: HomeProps) => {
             </IonButton>
           ))
           }
-        </IonRow>
-        <IonRow className="ion-justify-content-center" >
+        </div>
+        <div className="keypad-row" >
           {numbers[1].map(number => (
             <IonButton
+              expand='full'
               onClick={() => setInputValue(prevState => prevState + number.toString())}
               className="keypad-button"
               key={number}
@@ -37,10 +38,11 @@ const KeyPad = ({ setInputValue, handleCall }: HomeProps) => {
             </IonButton>
           ))
           }
-        </IonRow >
-        <IonRow className="ion-justify-content-center" >
+        </div >
+        <div className="keypad-row" >
           {numbers[2].map(number => (
             <IonButton
+              expand='full'
               onClick={() => setInputValue(prevState => prevState + number.toString())}
               className="keypad-button"
               key={number}
@@ -49,16 +51,22 @@ const KeyPad = ({ setInputValue, handleCall }: HomeProps) => {
             </IonButton>
           ))
           }
-        </IonRow>
-        <IonRow className="ion-justify-content-center keypad-row" >
-          <IonButton 
-          color="success" 
-          className="keypad-button"
-          onClick={handleCall}
-          >
-            <IonIcon  color="dark" icon={callSharp} />
-          </IonButton>
+        </div>
+        <div className="keypad-row" >
+          <div className='keypad-button-call-container'>
+            <IonButton
+              shape='round'
+              expand='block'
+              color="secondary"
+              size='small'
+              className="keypad-button keypad-button-call-color "
+              onClick={handleCall}
+            >
+              <IonIcon size='extralarge' icon={callSharp} />
+            </IonButton>
+          </div>
           <IonButton
+            expand='full'
             onClick={() => setInputValue(prevState => prevState + "0")}
             className="keypad-button"
           >
@@ -67,9 +75,8 @@ const KeyPad = ({ setInputValue, handleCall }: HomeProps) => {
           <IonButton className="keypad-button" >
             <IonIcon icon={laptop} />
           </IonButton>
-        </IonRow>
-      </IonCol>
-    </IonGrid>
+        </div>
+      </>
   )
 }
 
