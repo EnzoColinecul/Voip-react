@@ -1,5 +1,6 @@
 import { ThunkAction } from "redux-thunk";
 import {
+  Bye,
   Invitation,
   InvitationAcceptOptions,
   Inviter,
@@ -57,12 +58,18 @@ export const startCall = (sipToCall: string): ThunkResult<void> => {
     inviter.invite()
       .then(() => {
         // INVITE sent
+        dispatch(setOutgoingSession(outgoingSession))
       })
       .catch((error: Error) => {
         // INVITE did not send
       });
   }
 }
+
+export const setOutgoingSession = (outgoingSession: Inviter) => ({
+  type: types.sipSetOutgoingCall,
+  payload: outgoingSession
+})
 
 export const setExtensionTocall = (sipToCall: string) => ({
   type: types.sipSetExtensionToCall,
@@ -151,6 +158,7 @@ export const handleStateChanges = (
           break;
         case SessionState.Terminated:
           dispatch(setSessionState(SessionState.Terminated))
+          dispatch(clearIncomingSession())
           break;
         default:
           throw new Error("Unknown session state.");
@@ -164,9 +172,13 @@ export const setSessionState = (sessionState: SessionState) => ({
   payload: sessionState
 })
 
-export const startHangupCall = (invitation: Invitation): ThunkResult<void> => {
+export const startHangupCall = (invitation: Inviter, sessionState: string): ThunkResult<void> => {
   return (dispatch) => {
-    invitation.bye()
+    if (sessionState === 'Establishing') invitation.cancel()
+
+    if (sessionState === 'Established') invitation.bye()
+    else invitation.dispose()
+    
     dispatch(clearIncomingSession())
   }
 }

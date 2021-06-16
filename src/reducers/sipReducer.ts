@@ -12,6 +12,7 @@ const initialState = {
   userAgent: {},
   extensionToCall: null,
   sessionState: null,
+  outgoingSession: null,
   incomingSession: null,
   startCall: ''
 }
@@ -28,10 +29,15 @@ export const sipReducer = (state: SipState = initialState, action: SipAction) =>
         ...state,
         sessionState: action.payload
       }
-    case types.sipSetExtensionToCall:      
+    case types.sipSetExtensionToCall:
       return {
         ...state,
         extensionToCall: action.payload
+      }
+    case types.sipSetOutgoingCall:
+      return {
+        ...state,
+        outgoingSession: action.payload
       }
     case types.sipStartCommunication:
       return {

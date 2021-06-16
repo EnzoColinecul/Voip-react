@@ -26,21 +26,25 @@ import { RootState } from '../../store/store'
 
 const ModalCall = ({ incomingSession }) => {
   const dispatch = useDispatch()
-  const { sessionState, extensionToCall } = useSelector((state: RootState) => state.sip)
+  const { sessionState, extensionToCall, outgoingSession } = useSelector((state: RootState) => state.sip)
 
-  const handleHangup = () => dispatch(startHangupCall(incomingSession))
-    
+  const handleHangup = () => {
+    if (outgoingSession) {
+      dispatch(startHangupCall(outgoingSession, sessionState))
+    } else dispatch(startHangupCall(incomingSession, sessionState))
+  }
+
   return (
     <IonContent fullscreen={true}>
       <IonTitle className='modal-call-header-title' size='large' >
-        {extensionToCall  ?
+        {extensionToCall ?
           extensionToCall
           :
           incomingSession?.assertedIdentity?.displayName
         }
       </IonTitle>
       <div className='modal-call-title'>
-        <IonText>{sessionState === 'Establishing' ? 'Calling' : 'Established' }</IonText>
+        <IonText>{sessionState}</IonText>
         {sessionState === 'Establishing' &&
           <IonSpinner className='modal-call-tittle-spinner' name='dots' />
         }

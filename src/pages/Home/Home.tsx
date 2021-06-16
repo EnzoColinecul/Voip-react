@@ -23,7 +23,7 @@ import {
 import { ellipseSharp, keypad, settingsSharp } from 'ionicons/icons';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { startCall, startAcceptCall, startRejectCall } from '../../actions/sip'
+import { startCall, startAcceptCall, startRejectCall, clearIncomingSession } from '../../actions/sip'
 import { finishAlert, setError, startAlert } from '../../actions/ui'
 import { RootState } from '../../store/store';
 import ExploreContainer from '../../components/ExploreContainer';
@@ -32,7 +32,6 @@ import ModalCall from '../../components/home/ModalCall';
 import './Home.css';
 
 const Home: React.FC = () => {
-
   const [inputValue, setInputValue] = useState<string | null>('')
   const { msgError, showAlert } = useSelector((state: RootState) => state.ui)
   const { incomingSession, sessionState } = useSelector((state: RootState) => state.sip)
@@ -79,7 +78,10 @@ const Home: React.FC = () => {
           answerCallBtn
         ]}
       />
-      <IonModal isOpen={sessionState === 'Establishing' || sessionState === 'Established'}>
+      <IonModal 
+        onDidDismiss={() => dispatch(clearIncomingSession())}
+        isOpen={sessionState === 'Establishing' || sessionState === 'Established'}
+      >
         <ModalCall incomingSession={incomingSession} />
       </IonModal>
       <IonPage>
