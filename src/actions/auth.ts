@@ -82,6 +82,7 @@ export const startLoginWithUserAndPassword = (user: string, password: string): T
       }, 1000);
     }).catch((err: Error) => {
       alert(err);
+      dispatch(finishLoading())
     })
   }
 }

@@ -40,10 +40,8 @@ const AppRouter = () => {
         message={msgError}
         position="top"
         duration={2000}
-        color="light"
       />
-
-      <IonLoading isOpen={loading} message="Espere..." duration={4000} />
+      <IonLoading  isOpen={loading} message="Espere..." />
       <IonReactRouter>
         <Switch>
           <PrivateRoute

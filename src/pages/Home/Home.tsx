@@ -59,12 +59,12 @@ const Home: React.FC = () => {
   const rejectCallBtn = {
     text: 'Reject Call',
     role: 'reject',
-    handler: handlerRejectCall
+    handler: handlerRejectCall,
   }
 
   const answerCallBtn = {
     text: 'Accept',
-    handler: handleAnswerCall
+    handler: handleAnswerCall,
   }
 
   return (
@@ -73,7 +73,7 @@ const Home: React.FC = () => {
         isOpen={incomingSession !== null}
         header={'Incoming Call'}
         subHeader={incomingSession && `From internal ${incomingSession.assertedIdentity?.displayName}`}
-        cssClass='my-custom-class '
+        cssClass='home-call-alert'
         buttons={[
           rejectCallBtn,
           answerCallBtn
@@ -88,39 +88,28 @@ const Home: React.FC = () => {
             <div className="header-container">
               <IonTitle >
                 Status: Online
-            </IonTitle>
+              </IonTitle>
               <IonIcon size="small" color="success" icon={ellipseSharp} />
             </div>
           </IonToolbar>
         </IonHeader>
         <IonContent className="ion-justify-content-center" color="primary"  >
-          <IonCard className="md ion-margin-horizontal" >
-            <IonCardContent>
-              <IonCardHeader >
-                <IonButton
-                  fill="clear"
-                >
-                  <IonIcon color="dark" icon={settingsSharp}></IonIcon>
-                </IonButton>
-              </IonCardHeader>
-              <IonItem color="light" >
+          <div>
+            <div className="home-complete-keypad">
+              <IonItem color="secondary" >
                 <IonInput
-                  className="input-keypad"
+                  className="home-input-keypad"
                   value={inputValue}
                   onIonChange={handleInputChange}
                   type="number"
-                  color="dark"
+                  color="primary"
                   placeholder="Ingrese numero de telefono"
                   clearInput
                 />
               </IonItem>
-              <IonGrid size-md="6">
-                <div className="keypad-container">
-                  <KeyPad setInputValue={setInputValue} handleCall={handleCall} />
-                </div>
-              </IonGrid>
-            </IonCardContent>
-          </IonCard>
+              <KeyPad setInputValue={setInputValue} handleCall={handleCall} />
+            </div>
+          </div>
         </IonContent>
       </IonPage>
     </>
