@@ -36,7 +36,7 @@ export const startCall = (sipToCall: string): ThunkResult<void> => {
     }
 
     const inviter = new Inviter(userAgent, target)
-    dispatch(handleStateChanges(inviter, localAudio, remoteAudio))
+    dispatch(handleStateChanges(inviter, remoteAudio))
     const outgoingSession = inviter
 
 
@@ -78,10 +78,7 @@ export const setExtensionTocall = (sipToCall: string) => ({
 
 export const startAcceptCall = (invitation: Invitation): ThunkResult<void> => {
   return (dispatch, getState) => {
-    dispatch(handleStateChanges(invitation, localAudio, remoteAudio))
     const incomingSession = invitation
-
-
     // Setup incoming session delegate
     incomingSession.delegate = {
       // Handle incoming REFER request.
@@ -100,7 +97,6 @@ export const startAcceptCall = (invitation: Invitation): ThunkResult<void> => {
         constraints: constrainsDefault,
       }
     }
-
     incomingSession.accept(options)
   }
 }
@@ -116,28 +112,30 @@ export const clearIncomingSession = () => ({
   type: types.sipClearIncomingSession
 })
 
+export const startReceiveInvitation = (invitation: Invitation): ThunkResult<void> => {
+  return (dispatch) => {
+    dispatch(handleStateChanges(invitation, remoteAudio))
+    dispatch(setInvitation(invitation))
+  }
+}
+
 export const setInvitation = (invitation: Invitation) => ({
   type: types.sipIncomingCall,
   payload: invitation
 })
 
-
 export const handleStateChanges = (
   session: Session,
-  localHTMLMediaElement: HTMLAudioElement | HTMLVideoElement | null,
   remoteHTMLMediaElement: HTMLAudioElement | HTMLVideoElement | null
 ): ThunkResult<void> => {
   return (dispatch) => {
     session.stateChange.addListener((state: SessionState) => {
       console.error(state);
-
       switch (state) {
         case SessionState.Initial:
           break;
         case SessionState.Establishing:
           // dispatch() Accion para mostrar modal
-          console.error('SessionState is', state);
-
           dispatch(setSessionState(SessionState.Establishing))
           break;
         case SessionState.Established:
@@ -145,9 +143,6 @@ export const handleStateChanges = (
           const sessionDescriptionHandler = session.sessionDescriptionHandler;
           if (!sessionDescriptionHandler || !(sessionDescriptionHandler instanceof Web.SessionDescriptionHandler)) {
             throw new Error("Invalid session description handler.");
-          }
-          if (localHTMLMediaElement) {
-            assignStream(sessionDescriptionHandler.localMediaStream, localHTMLMediaElement);
           }
           if (remoteHTMLMediaElement) {
             assignStream(sessionDescriptionHandler.remoteMediaStream, remoteHTMLMediaElement);
@@ -178,7 +173,7 @@ export const startHangupCall = (invitation: Inviter, sessionState: string): Thun
 
     if (sessionState === 'Established') invitation.bye()
     else invitation.dispose()
-    
+
     dispatch(clearIncomingSession())
   }
 }

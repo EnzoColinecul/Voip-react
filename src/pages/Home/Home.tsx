@@ -29,11 +29,13 @@ import { RootState } from '../../store/store';
 import ExploreContainer from '../../components/ExploreContainer';
 import KeyPad from '../../components/home/KeyPad';
 import ModalCall from '../../components/home/ModalCall';
+import logo from '../../assets/images/voip-icon-v2.svg'
 import './Home.css';
 
 const Home: React.FC = () => {
   const [inputValue, setInputValue] = useState<string | null>('')
   const { msgError, showAlert } = useSelector((state: RootState) => state.ui)
+  const { user } = useSelector((state: RootState) => state.auth)
   const { incomingSession, sessionState } = useSelector((state: RootState) => state.sip)
 
   const dispatch = useDispatch()
@@ -70,29 +72,27 @@ const Home: React.FC = () => {
     <>
       <IonAlert
         isOpen={incomingSession !== null}
-        header={'Incoming Call'}
+        header={"Incoming Call"}
         subHeader={incomingSession && `From internal ${incomingSession.assertedIdentity?.displayName}`}
-        cssClass='home-call-alert'
+        cssClass="home-call-alert"
         buttons={[
           rejectCallBtn,
           answerCallBtn
         ]}
       />
-      <IonModal 
+      <IonModal
+        cssClass='modal-background'
         onDidDismiss={() => dispatch(clearIncomingSession())}
-        isOpen={sessionState === 'Establishing' || sessionState === 'Established'}
+        isOpen={sessionState === "Establishing" || sessionState === "Established"}
       >
         <ModalCall incomingSession={incomingSession} />
       </IonModal>
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <div className="header-container">
-              <IonTitle >
-                Status: Online
-              </IonTitle>
-              <IonIcon size="small" color="success" icon={ellipseSharp} />
-            </div>
+            <IonTitle size='small' slot='start' >
+              Registrado: {user}
+            </IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonContent className="ion-justify-content-center" color="primary"  >
@@ -115,7 +115,7 @@ const Home: React.FC = () => {
         </IonContent>
       </IonPage>
     </>
-  );
-};
+  )
+}
 
 export default Home;

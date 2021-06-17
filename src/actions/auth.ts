@@ -15,12 +15,12 @@ import { setError, startLoading, finishLoading } from "./ui"
 import { assignStream } from '../helpers/assignStream'
 import { createElement } from "react"
 import { TransportOptions } from "sip.js/lib/platform/web"
-import { setInvitation } from "./sip"
+import { startReceiveInvitation } from "./sip"
 import { ThunkAction } from "redux-thunk"
 import { RootState } from "../store/store"
 import { ws_domain } from "../server/domain"
 
-type Actions = { type: 'FOO' } | { type: string};
+type Actions = { type: 'FOO' } | { type: string };
 
 type ThunkResult<R> = ThunkAction<R, RootState, undefined, Actions>;
 
@@ -50,7 +50,7 @@ export const startLoginWithUserAndPassword = (user: string, password: string): T
       authorizationUsername: subString,
       displayName: subString,
       delegate: {
-        onInvite: (invitation) => dispatch(setInvitation(invitation))
+        onInvite: (invitation) => dispatch(startReceiveInvitation(invitation))
       }
     }
 
