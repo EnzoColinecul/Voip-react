@@ -36,9 +36,9 @@ export const startCall = (sipToCall: string): ThunkResult<void> => {
     }
 
     const inviter = new Inviter(userAgent, target)
-    dispatch(handleStateChanges(inviter, remoteAudio))
     const outgoingSession = inviter
-
+    
+    dispatch(handleStateChanges(inviter, remoteAudio))
 
     const inviterOptions: InviterOptions = {
       params: {
@@ -47,17 +47,20 @@ export const startCall = (sipToCall: string): ThunkResult<void> => {
       }
     }
 
+   
+
+    
     outgoingSession.delegate = {
       // Handle incoming REFER request.
       onRefer(referral: Referral): void {
         // ...
       },
     }
-
+    
     // Send the INVITE request
     inviter.invite()
-      .then(() => {
-        // INVITE sent
+    .then(() => {
+      // INVITE sent
         dispatch(setOutgoingSession(outgoingSession))
       })
       .catch((error: Error) => {
@@ -129,13 +132,23 @@ export const handleStateChanges = (
   remoteHTMLMediaElement: HTMLAudioElement | HTMLVideoElement | null
 ): ThunkResult<void> => {
   return (dispatch) => {
+    const options = {
+      requestOptions: {
+        body: {
+          contentDisposition: "render",
+          contentType: "application/dtmf-relay",
+          content: "Signal=1\r\nDuration=1000"
+        }
+      }
+    }
+    
     session.stateChange.addListener((state: SessionState) => {
       console.error(state);
       switch (state) {
         case SessionState.Initial:
+          session.info(options)
           break;
         case SessionState.Establishing:
-          // dispatch() Accion para mostrar modal
           dispatch(setSessionState(SessionState.Establishing))
           break;
         case SessionState.Established:
@@ -167,13 +180,11 @@ export const setSessionState = (sessionState: SessionState) => ({
   payload: sessionState
 })
 
-export const startHangupCall = (invitation: Inviter, sessionState: string): ThunkResult<void> => {
-  return (dispatch) => {
+export const startHangupCall = (invitation: Inviter): ThunkResult<void> => {
+  return (dispatch, getState) => {
+    const { sessionState } = getState().sip
     if (sessionState === 'Establishing') invitation.cancel()
-
-    if (sessionState === 'Established') invitation.bye()
-    else invitation.dispose()
-
+    else invitation.bye()
     dispatch(clearIncomingSession())
   }
 }

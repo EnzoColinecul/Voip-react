@@ -20,7 +20,7 @@ import {
 } from "@ionic/react"
 import { callSharp, keypad, micCircle, micOutline, volumeHighOutline } from 'ionicons/icons'
 import { useDispatch, useSelector } from 'react-redux'
-import { startHangupCall } from '../../actions/sip'
+import { clearIncomingSession, startHangupCall } from '../../actions/sip'
 import { RootState } from '../../store/store'
 
 
@@ -29,9 +29,11 @@ const ModalCall = ({ incomingSession }) => {
   const { sessionState, extensionToCall, outgoingSession } = useSelector((state: RootState) => state.sip)
 
   const handleHangup = () => {
-    if (outgoingSession) {
-      dispatch(startHangupCall(outgoingSession, sessionState))
-    } else dispatch(startHangupCall(incomingSession, sessionState))
+    if (outgoingSession && incomingSession === null) {
+      dispatch(startHangupCall(outgoingSession))
+    } else {
+      dispatch(startHangupCall(incomingSession))
+    }
   }
 
   return (
