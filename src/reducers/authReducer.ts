@@ -1,10 +1,11 @@
 import { types } from "../types/types";
 
-type initialState = {
-  registerState: string
+const initialState = {
+  registerState: null,
+  user: null
 }
 
-export const authReducer = (state: LoginState = { registerState: "" }, action: LoginAction) => {
+export const authReducer = (state: LoginState = initialState, action: LoginAction) => {
   switch (action.type) {
     case types.authLogin:
       return {

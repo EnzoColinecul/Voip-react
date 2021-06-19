@@ -1,11 +1,10 @@
 interface ILogin {
-  user: string,
-  registerState: string
+  user: string  | null,
+  registerState: string | null
 }
 
-type LoginState = {
-  registerState: string 
-}
+type LoginState = ILogin
+
 
 type LoginAction = {
   type: string,
@@ -26,8 +25,15 @@ type UiAction = {
 }
 
 interface SipInterface {
-  extensionNumber: number,
-  sessionState: string,
+  extensionToCall: string | null,
+  sessionState: string | null,
+}
+
+type SipState = {
+  userAgent: object | UserAgent,
+  extensionToCall: string | null,
+  sessionState: string | null,
+  startCall: string | null
 }
 
 type SipAction = {

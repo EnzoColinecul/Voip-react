@@ -1,19 +1,38 @@
 import { types } from "../types/types"
 import {
+  Invitation,
+  InvitationAcceptOptions,
+  Referral,
   Registerer,
   RegistererState,
+  Session,
+  SessionState,
   UserAgent,
-  UserAgentOptions
+  UserAgentOptions,
+  Web
 } from 'sip.js'
 import { setError, startLoading, finishLoading } from "./ui"
+import { assignStream } from '../helpers/assignStream'
+import { createElement } from "react"
+import { TransportOptions } from "sip.js/lib/platform/web"
+import { startReceiveInvitation } from "./sip"
+import { ThunkAction } from "redux-thunk"
+import { RootState } from "../store/store"
+import { ws_domain } from "../server/domain"
 
-export const startLoginWithUserAndPassword = (user: string, password: string) => {
+type Actions = { type: 'FOO' } | { type: string };
 
-  return async (dispatch: any) => {
+type ThunkResult<R> = ThunkAction<R, RootState, undefined, Actions>;
+
+export const startLoginWithUserAndPassword = (user: string, password: string): ThunkResult<void> => {
+
+  return async (dispatch) => {
     dispatch(startLoading())
     const uri = UserAgent.makeURI(`sip:${user}`)
-    const transportOptions = {
-      server: 'ws://192.168.1.10:8088/ws'
+    const transportOptions: TransportOptions = {
+      server: ws_domain,
+      connectionTimeout: 60 * 10,
+      traceSip: true,
     }
 
     let subString: string = ""
@@ -30,20 +49,25 @@ export const startLoginWithUserAndPassword = (user: string, password: string) =>
       authorizationPassword: password,
       authorizationUsername: subString,
       displayName: subString,
+      delegate: {
+        onInvite: (invitation) => dispatch(startReceiveInvitation(invitation))
+      }
     }
 
     const userAgent = new UserAgent(userAgentOptions)
+
     const registerer = new Registerer(userAgent)
 
     userAgent.start().then(() => {
       setTimeout(() => {
-      registerer.register()
+        registerer.register()
         registerer.stateChange.addListener((newState: RegistererState) => {
           switch (newState) {
             case RegistererState.Initial:
               break;
             case RegistererState.Registered:
               dispatch(login(subString, RegistererState.Registered))
+              dispatch(UA(userAgent))
               break;
             case RegistererState.Unregistered:
               dispatch(setError(`Ingreso fallido, compruebe los datos ingresados SIP:${RegistererState.Unregistered}`))
@@ -55,9 +79,10 @@ export const startLoginWithUserAndPassword = (user: string, password: string) =>
           }
         })
         dispatch(finishLoading())
-      }, 4000);
+      }, 1000);
     }).catch((err: Error) => {
       alert(err);
+      dispatch(finishLoading())
     })
   }
 }
@@ -67,13 +92,10 @@ export const login = (user: string, registerState: string) => ({
   payload: {
     user,
     registerState,
-    test: 'pasaeltest'
   }
 })
 
-export const startCall = () => {
-
-}
-
-export const setCall = () => ({
+export const UA = (userAgent: UserAgent) => ({
+  type: types.sipUserAgent,
+  payload: userAgent
 })

@@ -1,6 +1,7 @@
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux'
 import thunk from 'redux-thunk'
 import { authReducer } from '../reducers/authReducer';
+import { sipReducer } from '../reducers/sipReducer';
 import { uiReducer } from '../reducers/uiReducer';
 
 declare global {
@@ -13,8 +14,10 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const reducers = combineReducers({
   auth: authReducer,
-  ui: uiReducer
+  ui: uiReducer,
+  sip: sipReducer
 })
+
 
 export const store = createStore(
   reducers,
@@ -22,3 +25,6 @@ export const store = createStore(
     applyMiddleware(thunk)
   )
 )
+
+export type RootState = ReturnType<typeof store.getState>
+export type AppDispatch = typeof store.dispatch

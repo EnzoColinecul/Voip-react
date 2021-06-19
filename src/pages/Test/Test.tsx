@@ -1,19 +1,6 @@
 import React, { ComponentProps, FunctionComponent, SetStateAction, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import {
-  Invitation,
-  InvitationAcceptOptions,
-  Inviter,
-  Referral,
-  Registerer,
-  SessionState,
-  Session,
-  UserAgent,
-  UserAgentOptions,
-  Ack
-} from 'sip.js'
-import { IncomingRequestMessage } from 'sip.js/lib/core'
-import {
   IonButton,
   IonCard,
   IonCardContent,
@@ -28,10 +15,16 @@ import {
   IonLabel,
   IonModal,
   IonRow,
-  useIonToast
-} from '@ionic/react'
-import { getAudio, getVideo } from '../../helpers/getElements'
-import './Test.css'
+  IonToast
+} from "@ionic/react"
+import { Dispatch } from 'redux'
+import { RootStateOrAny, useDispatch, useSelector } from 'react-redux'
+import { startLoginWithUserAndPassword } from '../../actions/auth'
+import { settingsSharp } from 'ionicons/icons'
+import LoginSettings from '../../components/LoginSettings'
+import './Login.css'
+import useForm from '../../hooks/useForm'
+import { setError } from '../../actions/ui'
 
 export interface LoginSettings {
   settingsLog: any;
@@ -40,174 +33,48 @@ export interface LoginSettings {
   name?: string | null;
 }
 
-const Test = () => {
 
-  const [present, dismiss] = useIonToast();
+const Login = () => {
 
-  async function playAudio() {
-    try {
-      await audio.play().then((e) => {
-      })
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  const dispatch: Dispatch<any> = useDispatch()
+  const { msgError } = useSelector((state: RootStateOrAny) => state.ui)
 
-  const audio = getAudio("audio")
-
-
-  const transportOptions = {
-    server: 'ws://192.168.1.10:8088/ws'
-  }
-
-  const uri = UserAgent.makeURI('sip:103@192.168.1.10:8088')
-
-  if (!uri) {
-    throw new Error('Failed to create URI');
-  }
-
-  const userAgentOptions: UserAgentOptions = {
-    uri,
-    transportOptions,
-    authorizationPassword: 'enzo103',
-    authorizationUsername: '103',
-    displayName: '103',
-
-    /* ... */
-  };
-  const userAgent = new UserAgent(userAgentOptions);
-  const registerer = new Registerer(userAgent);
-
-
-  userAgent.delegate = {
-    onInvite(invitation: Invitation): void {
-      // An Invitation is a Session
-      const incomingSession = invitation;
-
-      if (incomingSession.state === 'Initial') {
-        present("Incoming Call...")
-
-        const testAudio = document.getElementById("test-audio")
-        testAudio.onplay = (e) => {
-          e.preventDefault()
-          playAudio().then(() => {
-            console.log('Ring Ring');
-
-          }).catch(error => console.log(error))
-        }
-        console.log(testAudio);
-
-      }
-
-      incomingSession.delegate = {
-        // Handle incoming REFER request.
-        onRefer(referral: Referral): void {
-          // ...
-        },
-      };
-
-      // Handle incoming INVITE request.
-      let constrainsDefault = {
-        audio: true,
-        video: false,
-        render: {
-          remote: {
-            audio: audio
-          }
-        }
-      }
-
-      const options: InvitationAcceptOptions = {
-        sessionDescriptionHandlerOptions: {
-          constraints: constrainsDefault,
-        }
-      }
-      console.log("newstate asdsad", incomingSession.state);
-
-      incomingSession.stateChange.addListener((newState: SessionState) => {
-        console.log("newstate", newState);
-        switch (newState) {
-          case SessionState.Initial:
-
-            break;
-          case SessionState.Establishing:
-            // Session is establishing.
-            break;
-          case SessionState.Established:
-            // Session has been established.
-            break;
-          case SessionState.Terminated:
-            // Session has terminated.
-            break;
-          default:
-            break;
-        }
-      });
-
-    }
-  };
-
-  userAgent.start().then(() => {
-    registerer.register()
-    const target = UserAgent.makeURI("sip:104@192.168.1.10:8088");
-    if (!target) {
-      throw new Error("Failed to create target URI.");
-    }
-
-    const inviter = new Inviter(userAgent, target);
-
-    const outgoingSession = inviter;
-
-    outgoingSession.delegate = {
-      // Handle incoming REFER request.
-      onRefer(referral: Referral): void {
-        // ...
-      }
-    };
-
-    // Handle outgoing session state changes.
-    outgoingSession.stateChange.addListener((newState: SessionState) => {
-      switch (newState) {
-        case SessionState.Establishing:
-          // Session is establishing.
-          break;
-        case SessionState.Established:
-          // Session has been established.
-          break;
-        case SessionState.Terminated:
-          // Session has terminated.
-          break;
-        default:
-          break;
-      }
-    });
-
-    // Send the INVITE request
-    inviter.invite()
-      .then(() => {
-        // INVITE sent
-      })
-      .catch((error: Error) => {
-        // INVITE did not send
-      });
-
-    // Send an outgoing REFER request
-    const transferTarget = UserAgent.makeURI("sip:transfer@example.com");
-
-    if (!transferTarget) {
-      throw new Error("Failed to create transfer target URI.");
-    }
-
-   
+  const [showModal, setShowModal] = useState(false)
+  const [formValues, handleInputChange] = useForm({
+    username: "103@192.168.1.10:8088",
+    password: "enzo103"
   })
+
+  const { username, password } = formValues
+
+  const handleLogin = (e) => {
+    e.preventDefault()
+    dispatch(startLoginWithUserAndPassword(username, password))
+  }
+
   return (
     <>
-      <audio id="test-audio" autoPlay loop></audio>
+      <IonToast
+        isOpen={msgError !== null}
+        onDidDismiss={() => dispatch(setError(null)) }
+        message={msgError}
+        position="top"
+        duration={5000}
+      />
+      <IonModal onDidDismiss={() => setShowModal(false)} isOpen={showModal}>
+        <LoginSettings setShowModal={setShowModal} />
+      </IonModal>
       <IonContent color='primary'>
-        <IonCard>
+        <IonCard className="md ion-margin-horizontal" >
           <IonCardContent>
             <IonCardHeader>
-              <IonCardTitle> Test</IonCardTitle>
+              <IonCardTitle>Login</IonCardTitle>
+              <IonButton
+                fill='clear'
+                onClick={() => setShowModal(true)}
+              >
+                <IonIcon color='dark' icon={settingsSharp}></IonIcon>
+              </IonButton>
             </IonCardHeader>
             <IonGrid size-md='6'>
               <IonRow >
@@ -215,9 +82,12 @@ const Test = () => {
                   <IonLabel color='primary'>Ingrese Datos de Usuario</IonLabel>
                   <IonItem color='light'>
                     <IonInput
-                      name='display_name'
-                      type='email'
-                      placeholder='Username'
+                      onIonChange={handleInputChange}
+                      name='username'
+                      value={username}
+                      type='text'
+                      placeholder='Usuario@PBX/VoIP'
+                      color={('dark')}
                       required
                       clearInput
                     />
@@ -226,20 +96,20 @@ const Test = () => {
                   <IonItem color='light'>
                     <IonIcon color='light' name="eye-outline"></IonIcon>
                     <IonInput
+                      onIonChange={handleInputChange}
                       name='password'
+                      value={password}
                       type='password'
-                      placeholder='Ej: 101extension'
+                      placeholder='Contraseña'
                       required
                       clearInput
-
                     />
                   </IonItem>
-                  <IonLabel>
-                  </IonLabel>
                   <IonButton
+                    onClick={handleLogin}
                     expand='block'
                   >
-                    Atender
+                    Ingresar
                 </IonButton>
                 </IonCol>
               </IonRow>
@@ -251,5 +121,4 @@ const Test = () => {
   )
 }
 
-export default Test
-
+export default Login

@@ -12,3 +12,11 @@ export const setError = ( msgError : UiError) => ({
   type: types.uiSetError,
   payload: msgError
 })
+
+export const startAlert = () => ({
+  type: types.uiStartCallAlert
+})
+
+export const finishAlert = () => ({
+  type: types.uiFinishCallAlert
+})

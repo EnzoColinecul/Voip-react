@@ -9,22 +9,26 @@ import {
   IonCol,
   IonContent,
   IonGrid,
+  IonHeader,
   IonIcon,
   IonInput,
   IonItem,
   IonLabel,
   IonModal,
   IonRow,
-  IonToast
+  IonTitle,
+  IonToast,
+  IonToolbar
 } from "@ionic/react"
+import { settingsSharp } from 'ionicons/icons'
 import { Dispatch } from 'redux'
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux'
 import { startLoginWithUserAndPassword } from '../../actions/auth'
-import { settingsSharp } from 'ionicons/icons'
-import LoginSettings from '../../components/LoginSettings'
-import './Login.css'
-import useForm from '../../hooks/useForm'
 import { setError } from '../../actions/ui'
+import useForm from '../../hooks/useForm'
+import LoginSettings from '../../components/LoginSettings'
+import logo from '../../assets/images/voip-icon-v2.svg'
+import './Login.css'
 
 export interface LoginSettings {
   settingsLog: any;
@@ -56,7 +60,7 @@ const Login = () => {
     <>
       <IonToast
         isOpen={msgError !== null}
-        onDidDismiss={() => dispatch(setError(null)) }
+        onDidDismiss={() => dispatch(setError(null))}
         message={msgError}
         position="top"
         duration={5000}
@@ -65,65 +69,59 @@ const Login = () => {
         <LoginSettings setShowModal={setShowModal} />
       </IonModal>
       <IonContent color='primary'>
-        <IonCard className="md ion-margin-horizontal" >
-          <IonCardContent>
-            <IonCardHeader>
-              <IonCardTitle>Login</IonCardTitle>
-              <IonButton
-                fill='clear'
-                onClick={() => setShowModal(true)}
-              >
-                <IonIcon color='dark' icon={settingsSharp}></IonIcon>
-              </IonButton>
-            </IonCardHeader>
-            <IonGrid size-md='6'>
-              <IonRow >
-                <IonCol  >
-                  <IonLabel color='primary'>Ingrese Datos de Usuario</IonLabel>
-                  <IonItem color='light'>
-                    <IonInput
-                      onIonChange={handleInputChange}
-                      name='username'
-                      value={username}
-                      type='text'
-                      placeholder='Usuario@PBX/VoIP'
-                      color={('dark')}
-                      required
-                      clearInput
-                    />
-                  </IonItem>
-                  <IonLabel color='primary'>Ingrese Contraseña</IonLabel>
-                  <IonItem color='light'>
-                    <IonIcon color='light' name="eye-outline"></IonIcon>
-                    <IonInput
-                      onIonChange={handleInputChange}
-                      name='password'
-                      value={password}
-                      type='password'
-                      placeholder='Contraseña'
-                      required
-                      clearInput
-                    />
-                  </IonItem>
-                  <IonButton
-                    onClick={handleLogin}
-                    expand='block'
-                  >
-                    Ingresar
-                </IonButton>
-                </IonCol>
-              </IonRow>
-            </IonGrid>
-          </IonCardContent>
-        </IonCard>
+        <IonToolbar >
+          <IonButton
+            slot='end'
+            fill='clear'
+            onClick={() => setShowModal(true)}
+          >
+            <IonIcon color='dark' icon={settingsSharp}></IonIcon>
+          </IonButton>
+        </IonToolbar>
+        <div className='login-subheader'>
+          <IonIcon icon={logo} ></IonIcon>
+        </div>
+        <form className='ion-padding'>
+          <IonCol>
+            <IonLabel color='secondary' >Ingrese Datos de Usuario</IonLabel>
+            <IonItem className='login-item'>
+              <IonInput
+                className='login-input'
+                onIonChange={handleInputChange}
+                name='username'
+                value={username}
+                type='text'
+                placeholder='Usuario@PBX/VoIP'
+                required
+                clearInput
+              />
+            </IonItem>
+            <IonItem className='login-item'>
+              <IonInput
+                className='login-input'
+                onIonChange={handleInputChange}
+                name='password'
+                value={password}
+                type='password'
+                placeholder='Contraseña'
+                required
+                clearInput
+              />
+            </IonItem>
+            <IonButton
+              expand='block'
+              color='dark'
+              className='ion-padding-horizontal'
+              onClick={handleLogin}
+            >
+              Ingresar
+            </IonButton>
+          </IonCol>
+        </form>
+        
       </IonContent>
     </>
   )
-}
-
-Login.propTypes = {
-  // settings: PropTypes.object.isRequired,
-  // onLogin: PropTypes.func.isRequired
 }
 
 export default Login

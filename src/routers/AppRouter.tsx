@@ -1,18 +1,29 @@
 import React, { useEffect, useState } from 'react'
-import { IonLoading, IonRedirect, IonRouterOutlet, IonToast } from '@ionic/react'
+import {
+  IonAlert,
+  IonLoading,
+  IonRedirect,
+  IonRouterOutlet,
+  IonToast
+} from '@ionic/react'
 import { IonReactRouter } from '@ionic/react-router'
 import { Redirect, Route, Switch } from 'react-router'
-import { RootStateOrAny, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../store/store'
+import { finishAlert, setError } from '../actions/ui'
 import PublicRoute from './PublicRoute'
 import PrivateRoute from './PrivateRoute'
 import Home from '../pages/Home/Home'
 import Login from '../pages/Login/Login'
 
+import './index.css'
+
 const AppRouter = () => {
   const [isLogged, setIsLogged] = useState<boolean>(false)
+  const { msgError, loading, showAlert } = useSelector((state: RootState) => state.ui)
+  const { registerState } = useSelector((state: RootState) => state.auth)
 
-  const { msgError, loading } = useSelector((state: RootStateOrAny) => state.ui)
-  const { registerState } = useSelector((state: RootStateOrAny) => state.auth)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     setIsLogged(false)
@@ -24,13 +35,13 @@ const AppRouter = () => {
   return (
     <>
       <IonToast
-        isOpen={msgError}
+        isOpen={msgError !== null}
+        onDidDismiss={() => dispatch(setError(null))}
         message={msgError}
         position="top"
-        duration={200}
-        color="light"
+        duration={2000}
       />
-      <IonLoading isOpen={loading} message="Espere..." duration={4000} />
+      <IonLoading  isOpen={loading} message="Espere..." />
       <IonReactRouter>
         <Switch>
           <PrivateRoute
