@@ -20,59 +20,65 @@ import {
 } from "@ionic/react"
 import { callSharp, keypad, micCircle, micOutline, volumeHighOutline } from 'ionicons/icons'
 import { useDispatch, useSelector } from 'react-redux'
-import { startHangupCall } from '../../actions/sip'
+import { clearIncomingSession, startHangupCall } from '../../actions/sip'
 import { RootState } from '../../store/store'
 
 
 const ModalCall = ({ incomingSession }) => {
   const dispatch = useDispatch()
-  const { sessionState, extensionToCall } = useSelector((state: RootState) => state.sip)
+  const { sessionState, extensionToCall, outgoingSession } = useSelector((state: RootState) => state.sip)
 
-  const handleHangup = () => dispatch(startHangupCall(incomingSession))
-    
+  const handleHangup = () => {
+    if (outgoingSession && incomingSession === null) {
+      dispatch(startHangupCall(outgoingSession))
+    } else {
+      dispatch(startHangupCall(incomingSession))
+    }
+  }
+
   return (
-    <IonContent fullscreen={true}>
+    <IonContent className='modal-content' fullscreen={true}>
       <IonTitle className='modal-call-header-title' size='large' >
-        {extensionToCall  ?
+        {extensionToCall ?
           extensionToCall
           :
           incomingSession?.assertedIdentity?.displayName
         }
       </IonTitle>
-      <div className='modal-call-title'>
-        <IonText>{sessionState === 'Establishing' ? 'Calling' : 'Established' }</IonText>
-        {sessionState === 'Establishing' &&
-          <IonSpinner className='modal-call-tittle-spinner' name='dots' />
+      <div className="modal-call-title">
+        <IonText>{sessionState}</IonText>
+        {sessionState === "Establishing" &&
+          <IonSpinner className="modal-call-tittle-spinner" name="dots" />
         }
       </div>
       <IonGrid>
-        <IonRow className='modal-row' >
+        <IonRow className="modal-row" >
           <IonCol >
-            <IonFab horizontal='center' >
-              <IonFabButton color='secondary' className="modal-fab-button" >
-                <IonIcon size='large' icon={volumeHighOutline} />
+            <IonFab horizontal="center" >
+              <IonFabButton color="primary" className="modal-fab-button" >
+                <IonIcon size="large" icon={volumeHighOutline} />
               </IonFabButton>
             </IonFab>
           </IonCol>
           <IonCol >
-            <IonFab horizontal='center' >
-              <IonFabButton color='secondary' className="modal-fab-button" >
-                <IonIcon size='large' icon={micOutline} />
+            <IonFab horizontal="center" >
+              <IonFabButton color="primary" className="modal-fab-button" >
+                <IonIcon size="large" icon={micOutline} />
               </IonFabButton>
             </IonFab>
           </IonCol>
           <IonCol>
-            <IonFab horizontal='center' >
-              <IonFabButton color='secondary' className="modal-fab-button" >
-                <IonIcon size='large' icon={keypad} />
+            <IonFab horizontal="center" >
+              <IonFabButton color="primary" className="modal-fab-button" >
+                <IonIcon size="large" icon={keypad} />
               </IonFabButton>
             </IonFab>
           </IonCol>
         </IonRow>
-        <IonRow className='modal-row' >
+        <IonRow className="modal-row" >
           <IonCol  >
-            <IonFab horizontal='center' color='danger' >
-              <IonFabButton onClick={handleHangup} className="modal-fab-button" color='danger' >
+            <IonFab horizontal="center" color="danger" >
+              <IonFabButton onClick={handleHangup} className="modal-fab-button" color="danger" >
                 <IonIcon className="icon-transform" icon={callSharp} />
               </IonFabButton>
             </IonFab>

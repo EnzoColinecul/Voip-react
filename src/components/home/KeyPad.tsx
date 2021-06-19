@@ -16,7 +16,7 @@ const KeyPad = ({ setInputValue, handleCall }: HomeProps) => {
         <div className="keypad-row"  >
           {numbers[0].map(number => (
             <IonButton
-              expand='full'
+              expand="full"
               onClick={() => setInputValue(prevState => prevState + number.toString())}
               className="keypad-button"
               key={number}
@@ -29,7 +29,7 @@ const KeyPad = ({ setInputValue, handleCall }: HomeProps) => {
         <div className="keypad-row" >
           {numbers[1].map(number => (
             <IonButton
-              expand='full'
+              expand="full"
               onClick={() => setInputValue(prevState => prevState + number.toString())}
               className="keypad-button"
               key={number}
@@ -42,7 +42,7 @@ const KeyPad = ({ setInputValue, handleCall }: HomeProps) => {
         <div className="keypad-row" >
           {numbers[2].map(number => (
             <IonButton
-              expand='full'
+              expand="full"
               onClick={() => setInputValue(prevState => prevState + number.toString())}
               className="keypad-button"
               key={number}
@@ -53,20 +53,20 @@ const KeyPad = ({ setInputValue, handleCall }: HomeProps) => {
           }
         </div>
         <div className="keypad-row" >
-          <div className='keypad-button-call-container'>
+          <div className="keypad-button-call-container">
             <IonButton
-              shape='round'
-              expand='block'
+              shape="round"
+              expand="block"
               color="secondary"
-              size='small'
+              size="small"
               className="keypad-button keypad-button-call-color "
               onClick={handleCall}
             >
-              <IonIcon size='extralarge' icon={callSharp} />
+              <IonIcon size="extralarge" icon={callSharp} />
             </IonButton>
           </div>
           <IonButton
-            expand='full'
+            expand="full"
             onClick={() => setInputValue(prevState => prevState + "0")}
             className="keypad-button"
           >
