@@ -4,6 +4,9 @@
   "private": true,
   "dependencies": {
     "@capacitor/core": "2.4.7",
+    "@ionic-native/core": "^5.33.1",
+    "@ionic-native/vibration": "^5.33.1",
+    "@ionic/pwa-elements": "^3.0.2",
     "@ionic/react": "^5.5.0",
     "@ionic/react-router": "^5.5.0",
     "@testing-library/jest-dom": "^5.11.9",
@@ -16,6 +19,7 @@
     "@types/react-router": "^5.1.11",
     "@types/react-router-dom": "^5.1.7",
     "clone": "^2.1.2",
+    "cordova-plugin-vibration": "^3.1.1",
     "deepmerge": "^4.2.2",
     "ionicons": "^5.4.0",
     "react": "^17.0.1",
