@@ -58,6 +58,9 @@ const ModalCall = ({ incomingSession }) => {
               <IonFabButton color="primary" className="modal-fab-button" >
                 <IonIcon size="large" icon={volumeHighOutline} />
               </IonFabButton>
+              <IonLabel className="ion-margin-vertical  ion-padding-vertical">
+                Speaker
+              </IonLabel>
             </IonFab>
           </IonCol>
           <IonCol >
@@ -65,6 +68,9 @@ const ModalCall = ({ incomingSession }) => {
               <IonFabButton color="primary" className="modal-fab-button" >
                 <IonIcon size="large" icon={micOutline} />
               </IonFabButton>
+              <IonLabel className="ion-margin-vertical  ion-padding-start ion-padding-vertical">
+                Mute
+              </IonLabel>
             </IonFab>
           </IonCol>
           <IonCol>
@@ -72,6 +78,9 @@ const ModalCall = ({ incomingSession }) => {
               <IonFabButton color="primary" className="modal-fab-button" >
                 <IonIcon size="large" icon={keypad} />
               </IonFabButton>
+              <IonLabel className="ion-margin-vertical  ion-padding-start ion-padding-vertical">
+                Keypad
+              </IonLabel>
             </IonFab>
           </IonCol>
         </IonRow>

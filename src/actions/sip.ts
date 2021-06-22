@@ -82,6 +82,9 @@ export const setExtensionTocall = (sipToCall: string) => ({
 export const startAcceptCall = (invitation: Invitation): ThunkResult<void> => {
   return (dispatch, getState) => {
     const incomingSession = invitation
+
+    console.error(incomingSession);
+    
     // Setup incoming session delegate
     incomingSession.delegate = {
       // Handle incoming REFER request.
