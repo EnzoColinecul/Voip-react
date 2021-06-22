@@ -29,6 +29,7 @@ import useForm from '../../hooks/useForm'
 import LoginSettings from '../../components/LoginSettings'
 import logo from '../../assets/images/voip-icon-v2.svg'
 import './Login.css'
+import { sip_domain } from '../../server/domain'
 
 export interface LoginSettings {
   settingsLog: any;
@@ -45,7 +46,7 @@ const Login = () => {
 
   const [showModal, setShowModal] = useState(false)
   const [formValues, handleInputChange] = useForm({
-    username: "103@192.168.1.10:8088",
+    username: `103@${sip_domain}`,
     password: "enzo103"
   })
 
