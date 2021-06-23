@@ -3,8 +3,8 @@
     "static/js/0.d5c1040b.chunk.js": "/Voip-react/static/js/0.d5c1040b.chunk.js",
     "static/js/0.d5c1040b.chunk.js.map": "/Voip-react/static/js/0.d5c1040b.chunk.js.map",
     "main.css": "/Voip-react/static/css/main.19fdd2da.chunk.css",
-    "main.js": "/Voip-react/static/js/main.518c26c8.chunk.js",
-    "main.js.map": "/Voip-react/static/js/main.518c26c8.chunk.js.map",
+    "main.js": "/Voip-react/static/js/main.18a82b46.chunk.js",
+    "main.js.map": "/Voip-react/static/js/main.18a82b46.chunk.js.map",
     "polyfills-dom.js": "/Voip-react/static/js/polyfills-dom.d51397e4.chunk.js",
     "polyfills-dom.js.map": "/Voip-react/static/js/polyfills-dom.d51397e4.chunk.js.map",
     "runtime-main.js": "/Voip-react/static/js/runtime-main.61f68ffb.js",
@@ -131,6 +131,6 @@
     "static/css/4.672a8906.chunk.css",
     "static/js/4.3d275e51.chunk.js",
     "static/css/main.19fdd2da.chunk.css",
-    "static/js/main.518c26c8.chunk.js"
+    "static/js/main.18a82b46.chunk.js"
   ]
 }
