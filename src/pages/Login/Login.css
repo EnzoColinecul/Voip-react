@@ -43,7 +43,7 @@ ion-col {
 }
 
 ion-label {
-  display: flex;
+  display: flex;  
   justify-content: center;
   font-size: 18px;
   font-weight: bold;
