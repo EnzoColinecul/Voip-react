@@ -99,6 +99,7 @@ const Home: React.FC = () => {
       />
       <IonModal
         cssClass='modal-background'
+        backdropDismiss={false}
         onDidDismiss={() => dispatch(clearIncomingSession())}
         isOpen={sessionState === "Establishing" || sessionState === "Established"}
       >
@@ -125,7 +126,7 @@ const Home: React.FC = () => {
             </IonFabButton>
           </IonFab>
           <div hidden={!showKeypad} className="home-complete-keypad">
-            <IonItem style={{ margin: 0 }} color="secondary" >
+            <IonItem class="home-input-keypad-container" style={{ margin: 0 }} color="secondary" >
               <IonIcon
                 className="home-forward-icon"
                 onClick={() => setShowKeypad(false)}

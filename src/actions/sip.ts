@@ -119,7 +119,7 @@ export const clearIncomingSession = () => ({
 })
 
 export const startReceiveInvitation = (invitation: Invitation): ThunkResult<void> => {
-  return (dispatch) => {
+  return async(dispatch) => {
     dispatch(handleStateChanges(invitation, remoteAudio))
     dispatch(setInvitation(invitation))
   }
