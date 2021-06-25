@@ -1,14 +1,18 @@
 {
-  "appId": "com.voip.app",
-  "appName": "Voip-react",
-  "bundledWebRuntime": false,
-  "npmClient": "npm",
-  "webDir": "build",
-  "linuxAndroidStudioPath": "/usr/android-studio/bin/studio.sh",
-  "plugins": {
-    "SplashScreen": {
-      "launchShowDuration": 0
-    }
-  },
-  "cordova": {}
+	"appId": "com.voip.app",
+	"appName": "Voip-react",
+	"bundledWebRuntime": false,
+	"npmClient": "npm",
+	"webDir": "build",
+	"linuxAndroidStudioPath": "/usr/android-studio/bin/studio.sh",
+	"plugins": {
+		"SplashScreen": {
+			"launchShowDuration": 0
+		}
+	},
+	"cordova": {},
+	"server": {
+		"url": "https://enzocolinecul.github.io/Voip-react",
+		"cleartext": true
+	}
 }

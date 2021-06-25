@@ -1,5 +1,5 @@
 import { IonButton, IonContent, IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonRow, IonText } from '@ionic/react'
-import { arrowBackOutline, callSharp } from 'ionicons/icons'
+import { arrowBackOutline, arrowRedo, callSharp } from 'ionicons/icons'
 import React from 'react'
 
 const CallLog = () => {
@@ -22,16 +22,20 @@ const CallLog = () => {
         </IonListHeader>
         {log.map((data, index) => (
           <IonItem key={index}>
-            <IonLabel >
-              <IonText className="ion-padding-horizontal">
+            <IonLabel className="call-log-label" >
+              <IonText>
                 {data.number}
               </IonText>
-              <IonRow className="ion-align-items-center ion-justify-content-between">
-                <IonIcon className="ion-padding-horizontal" icon={arrowBackOutline} />
-                <h2 color="primary-shade">{data.type}</h2>
-                <h3>12:45 Am</h3>
+              <IonRow className="ion-align-items-center">
+                <IonIcon
+                  className="ion-margin-horizontal call-log-arrow-incoming"
+                  icon={data.type === "not answered" ? arrowRedo : arrowBackOutline}
+                  color={data.type === "not answered" ? "danger" : "success"}
+                />
+                <h2 className="ion-margin-horizontal" color="primary-shade">{data.type}</h2>
+                <h2 style={{ color: 'gray' }} className="ion-padding-horizontal">12:45 Am</h2>
                 <IonButton
-                  className=""
+                  className="ion-margin-horizontal ion-justify-content-end"
                   shape="round"
                   color="secondary"
                 >

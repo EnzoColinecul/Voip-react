@@ -54,42 +54,45 @@ const ModalCall = ({ incomingSession }) => {
       <IonGrid>
         <IonRow className="modal-row" >
           <IonCol >
-            <IonFab horizontal="center" >
+            <IonFab className="modal-fab" horizontal="center" >
               <IonFabButton color="primary" className="modal-fab-button" >
                 <IonIcon size="large" icon={volumeHighOutline} />
               </IonFabButton>
-              <IonLabel className="ion-margin-vertical  ion-padding-vertical">
+              <IonLabel className="modal-label">
                 Speaker
               </IonLabel>
             </IonFab>
           </IonCol>
           <IonCol >
-            <IonFab horizontal="center" >
+            <IonFab className="modal-fab" horizontal="center" >
               <IonFabButton color="primary" className="modal-fab-button" >
                 <IonIcon size="large" icon={micOutline} />
               </IonFabButton>
-              <IonLabel className="ion-margin-vertical  ion-padding-start ion-padding-vertical">
+              <IonLabel className="modal-label">
                 Mute
               </IonLabel>
             </IonFab>
           </IonCol>
           <IonCol>
-            <IonFab horizontal="center" >
+            <IonFab className="modal-fab" horizontal="center" >
               <IonFabButton color="primary" className="modal-fab-button" >
                 <IonIcon size="large" icon={keypad} />
               </IonFabButton>
-              <IonLabel className="ion-margin-vertical  ion-padding-start ion-padding-vertical">
+              <IonLabel className="modal-label">
                 Keypad
               </IonLabel>
             </IonFab>
           </IonCol>
         </IonRow>
         <IonRow className="modal-row" >
-          <IonCol  >
-            <IonFab horizontal="center" color="danger" >
+          <IonCol className="modal-col-right">
+            <IonFab className="modal-fab " horizontal="center" color="danger" >
               <IonFabButton onClick={handleHangup} className="modal-fab-button" color="danger" >
                 <IonIcon className="icon-transform" icon={callSharp} />
               </IonFabButton>
+              <IonLabel className="modal-label">
+                Hangup
+              </IonLabel>
             </IonFab>
           </IonCol>
         </IonRow>

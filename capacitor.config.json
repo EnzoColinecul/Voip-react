@@ -10,5 +10,9 @@
       "launchShowDuration": 0
     }
   },
-  "cordova": {}
+  "cordova": {},
+  "server": {
+    "url": "https://enzocolinecul.github.io/Voip-react",
+    "cleartext": true
+  }
 }
