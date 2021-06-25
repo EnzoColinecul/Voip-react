@@ -47,9 +47,6 @@ export const startCall = (sipToCall: string): ThunkResult<void> => {
       }
     }
 
-   
-
-    
     outgoingSession.delegate = {
       // Handle incoming REFER request.
       onRefer(referral: Referral): void {
