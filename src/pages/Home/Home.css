@@ -97,7 +97,6 @@ input[type="number"] {
 
 .modal-call-header-title {
   font-size: 3.5em;
-  margin-top: 1em;
   --border-color: black;
   --background: black;
 }

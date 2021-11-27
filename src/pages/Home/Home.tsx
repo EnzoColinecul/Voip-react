@@ -1,35 +1,26 @@
+import { useState } from 'react';
 import {
+  CreateAnimation,
   IonAlert,
-  IonButton,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardTitle,
-  IonCol,
   IonContent,
   IonFab,
   IonFabButton,
-  IonGrid,
   IonHeader,
   IonIcon,
   IonInput,
   IonItem,
-  IonList,
   IonModal,
   IonPage,
-  IonRow,
   IonTitle,
   IonToast,
   IonToolbar
 } from '@ionic/react';
-import { chevronForwardCircleOutline, ellipseSharp, keypad, settingsSharp } from 'ionicons/icons';
 import { Vibration } from '@ionic-native/vibration'
-import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { chevronForwardCircleOutline, ellipseSharp, keypad, settingsSharp } from 'ionicons/icons';
 import { startCall, startAcceptCall, startRejectCall, clearIncomingSession } from '../../actions/sip'
-import { finishAlert, setError, startAlert } from '../../actions/ui'
+import { setError } from '../../actions/ui'
 import { RootState } from '../../store/store';
-import ExploreContainer from '../../components/ExploreContainer';
 import KeyPad from '../../components/home/KeyPad';
 import ModalCall from '../../components/home/ModalCall';
 import CallLog from '../../components/home/CallLog';
@@ -41,7 +32,6 @@ const Home: React.FC = () => {
   const [inputValue, setInputValue] = useState<string | null>('')
   const [showKeypad, setShowKeypad] = useState<boolean>(false)
 
-  const { msgError, showAlert } = useSelector((state: RootState) => state.ui)
   const { user } = useSelector((state: RootState) => state.auth)
   const { incomingSession, sessionState } = useSelector((state: RootState) => state.sip)
 
@@ -56,9 +46,7 @@ const Home: React.FC = () => {
     setInputValue(e.target.value)
   }
 
-  const handleBackspace = () => {
-    setInputValue(prevState => prevState.substring(0, prevState.length - 1))
-  }
+  const handleBackspace = () => setInputValue(prevState => prevState.substring(0, prevState.length - 1))
 
   const handleCall = () => {
     if (inputValue) {
@@ -115,40 +103,61 @@ const Home: React.FC = () => {
         </IonHeader>
         <IonContent className="ion-justify-content-center" color="primary">
           <CallLog />
-          <IonFab
-            hidden={showKeypad}
-            className='ion-padding-vertical'
-            vertical="bottom"
-            horizontal="end"
+          <CreateAnimation
+            duration={300}
+            fromTo={[
+              { property: 'transform', fromValue: 'scaleY(1.5)', toValue: 'scaleY(1)' },
+              { property: 'transform', fromValue: 'scaleX(1.5)', toValue: 'scaleX(1)' },
+              { property: 'opacity', fromValue: '0', toValue: '1' }
+            ]}
+            easing="ease-out"
+            play={!showKeypad}
           >
-            <IonFabButton onClick={() => setShowKeypad(true)} color="secondary">
-              <IonIcon icon={keypad} />
-            </IonFabButton>
-          </IonFab>
-          <div hidden={!showKeypad} className="home-complete-keypad">
-            <IonItem class="home-input-keypad-container" style={{ margin: 0 }} color="secondary" >
-              <IonIcon
-                className="home-forward-icon"
-                onClick={() => setShowKeypad(false)}
-                icon={chevronForwardCircleOutline}
+            <IonFab
+              hidden={showKeypad}
+              className='ion-padding-vertical'
+              vertical="bottom"
+              horizontal="end"
+            >
+              <IonFabButton onClick={() => setShowKeypad(true)} color="secondary">
+                <IonIcon icon={keypad} />
+              </IonFabButton>
+            </IonFab>
+          </CreateAnimation>
+          <CreateAnimation
+            duration={300}
+            fromTo={[
+              { property: 'transform', fromValue: 'translateY(200px)', toValue: 'translateY(0px)' },
+              { property: 'opacity', fromValue: '0', toValue: '1' }
+            ]}
+            easing="ease-in"
+            play={showKeypad}
+          >
+            <div hidden={!showKeypad} className="home-complete-keypad">
+              <IonItem class="home-input-keypad-container" style={{ margin: 0 }} color="secondary" >
+                <IonIcon
+                  className="home-forward-icon"
+                  onClick={() => setShowKeypad(false)}
+                  icon={chevronForwardCircleOutline}
+                />
+                <IonInput
+                  className="home-input-keypad"
+                  value={inputValue}
+                  onIonChange={handleInputChange}
+                  clearInput
+                  readonly
+                  type="number"
+                  color="primary"
+                  placeholder="Ingrese numero de telefono"
+                />
+              </IonItem>
+              <KeyPad
+                handleBackspace={handleBackspace}
+                handleCall={handleCall}
+                setInputValue={setInputValue}
               />
-              <IonInput
-                className="home-input-keypad"
-                value={inputValue}
-                onIonChange={handleInputChange}
-                clearInput
-                readonly
-                type="number"
-                color="primary"
-                placeholder="Ingrese numero de telefono"
-              />
-            </IonItem>
-            <KeyPad
-              handleBackspace={handleBackspace}
-              handleCall={handleCall}
-              setInputValue={setInputValue}
-            />
-          </div>
+            </div>
+          </CreateAnimation>
         </IonContent>
       </IonPage>
     </>

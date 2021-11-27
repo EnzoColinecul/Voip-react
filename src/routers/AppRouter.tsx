@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import {
-  IonAlert,
   IonLoading,
   IonRedirect,
   IonRouterOutlet,
@@ -10,7 +9,7 @@ import { IonReactRouter } from '@ionic/react-router'
 import { Redirect, Route, Switch } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../store/store'
-import { finishAlert, setError } from '../actions/ui'
+import { setError } from '../actions/ui'
 import PublicRoute from './PublicRoute'
 import PrivateRoute from './PrivateRoute'
 import Home from '../pages/Home/Home'
@@ -20,7 +19,7 @@ import './index.css'
 
 const AppRouter = () => {
   const [isLogged, setIsLogged] = useState<boolean>(false)
-  const { msgError, loading, showAlert } = useSelector((state: RootState) => state.ui)
+  const { msgError, loading } = useSelector((state: RootState) => state.ui)
   const { registerState } = useSelector((state: RootState) => state.auth)
 
   const dispatch = useDispatch()
@@ -41,22 +40,22 @@ const AppRouter = () => {
         position="top"
         duration={2000}
       />
-      <IonLoading  isOpen={loading} message="Espere..." />
+      <IonLoading isOpen={loading} message="Espere..." />
       <IonReactRouter>
-        <Switch>
-          <PrivateRoute
-            exact
-            path='/'
-            isLogged={isLogged}
-            component={Home}
-          />
-          <PublicRoute
-            path='/auth/login'
-            isLogged={isLogged}
-            component={Login}
-          />
-          <Redirect to='/' />
-        </Switch>
+          <Switch>
+            <PrivateRoute
+              exact
+              path='/'
+              isLogged={isLogged}
+              component={Home}
+            />
+            <PublicRoute
+              path='/auth/login'
+              isLogged={isLogged}
+              component={Login}
+            />
+            <Redirect to='/' />
+          </Switch>
       </IonReactRouter>
     </>
   )

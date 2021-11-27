@@ -1,6 +1,5 @@
 import { ThunkAction } from "redux-thunk";
 import {
-  Bye,
   Invitation,
   InvitationAcceptOptions,
   Inviter,
@@ -27,6 +26,7 @@ const localAudio: HTMLAudioElement | null = document.querySelector('#localAudio'
 export const startCall = (sipToCall: string): ThunkResult<void> => {
   return async (dispatch, getState) => {
     dispatch(setExtensionTocall(sipToCall))
+
     const { userAgent } = getState().sip
     const { user } = getState().auth
 
@@ -117,6 +117,7 @@ export const clearIncomingSession = () => ({
 
 export const startReceiveInvitation = (invitation: Invitation): ThunkResult<void> => {
   return async(dispatch) => {
+    
     dispatch(handleStateChanges(invitation, remoteAudio))
     dispatch(setInvitation(invitation))
   }

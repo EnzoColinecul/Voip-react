@@ -1,19 +1,12 @@
 import { types } from "../types/types"
 import {
-  Invitation,
-  InvitationAcceptOptions,
-  Referral,
   Registerer,
   RegistererState,
-  Session,
-  SessionState,
   UserAgent,
   UserAgentOptions,
   Web
 } from 'sip.js'
 import { setError, startLoading, finishLoading } from "./ui"
-import { assignStream } from '../helpers/assignStream'
-import { createElement } from "react"
 import { TransportOptions } from "sip.js/lib/platform/web"
 import { startReceiveInvitation } from "./sip"
 import { ThunkAction } from "redux-thunk"
